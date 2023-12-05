@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{amenity.list.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{amenity.list.headline}]]</h1>
+                <div>
+                    <a th:href="@{/amenities/add}" class="btn btn-primary ms-2">[[#{amenity.list.createNew}]]</a>
+                </div>
+            </div>
+            <div th:if="${amenities.empty}">[[#{amenity.list.empty}]]</div>
+            <div th:if="${!amenities.empty}" class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">[[#{amenity.id.label}]]</th>
+                            <th scope="col">[[#{amenity.name.label}]]</th>
+                            <th scope="col">[[#{amenity.type.label}]]</th>
+                            <th scope="col">[[#{amenity.capacity.label}]]</th>
+                            <th><!-- --></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="amenity : ${amenities}">
+                            <td>[[${amenity.id}]]</td>
+                            <td>[[${amenity.name}]]</td>
+                            <td>[[${amenity.type}]]</td>
+                            <td>[[${amenity.capacity}]]</td>
+                            <td>
+                                <div class="float-end text-nowrap">
+                                    <a th:href="@{/amenities/edit/{id}(id=${amenity.id})}" class="btn btn-sm btn-secondary">[[#{amenity.list.edit}]]</a>
+                                    <form th:action="@{/amenities/delete/{id}(id=${amenity.id})}"
+                                            th:hx-confirm="#{delete.confirm}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-secondary">[[#{amenity.list.delete}]]</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <title>[[#{reservation.edit.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{reservation.edit.headline}]]</h1>
+                <div>
+                    <a th:href="@{/reservations}" class="btn btn-secondary">[[#{reservation.edit.back}]]</a>
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('reservation')}" />
+            <form th:action="${requestUri}" method="post">
+                <div th:replace="~{fragments/forms::inputRow(object='reservation', field='id', disabled=true, type='number')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='reservation', field='reservationDate', inputClass='js-datepicker')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='reservation', field='startTime', inputClass='js-timepicker')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='reservation', field='endTime', inputClass='js-timepicker')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='reservation', field='user', type='select')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='reservation', field='amenities', type='multiselect')}" />
+                <input type="submit" th:value="#{reservation.edit.headline}" class="btn btn-primary mt-4" />
+            </form>
+        </div>
+    </body>
+</html>
