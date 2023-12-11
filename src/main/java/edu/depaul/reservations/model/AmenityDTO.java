@@ -22,4 +22,5 @@ public class AmenityDTO {
     @NotNull
     private Integer capacity;
 
+    private Double rate;
 }

@@ -21,6 +21,7 @@
                             <th scope="col">[[#{amenity.name.label}]]</th>
                             <th scope="col">[[#{amenity.type.label}]]</th>
                             <th scope="col">[[#{amenity.capacity.label}]]</th>
+                            <th scope="col">[[#{amenity.rate.label}]]</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
@@ -30,6 +31,7 @@
                             <td>[[${amenity.name}]]</td>
                             <td>[[${amenity.type}]]</td>
                             <td>[[${amenity.capacity}]]</td>
+                            <td>[[${amenity.rate}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
                                     <a th:href="@{/amenities/edit/{id}(id=${amenity.id})}" class="btn btn-sm btn-secondary">[[#{amenity.list.edit}]]</a>

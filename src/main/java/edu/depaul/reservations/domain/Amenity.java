@@ -48,6 +48,9 @@ public class Amenity {
     @Column(nullable = false)
     private Integer capacity;
 
+    @Column()
+    private Double rate;
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private OffsetDateTime dateCreated;
