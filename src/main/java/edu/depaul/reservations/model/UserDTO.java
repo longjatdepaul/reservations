@@ -20,6 +20,9 @@ public class UserDTO {
     @Size(max = 16)
     private String username;
 
+    @NotNull
+    private UserType type;
+
     @Size(max = 256)
     private String passwordHash;
 

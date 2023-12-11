@@ -1,14 +1,8 @@
 package edu.depaul.reservations.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import edu.depaul.reservations.model.UserType;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
 import java.util.Set;
 import lombok.Getter;
@@ -44,6 +38,10 @@ public class User {
 
     @Column(nullable = false, unique = true, length = 16)
     private String username;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserType type;
 
     @Column(length = 256)
     private String passwordHash;

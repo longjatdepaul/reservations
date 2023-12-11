@@ -58,6 +58,7 @@ public class UserService {
         userDTO.setId(user.getId());
         userDTO.setFullName(user.getFullName());
         userDTO.setUsername(user.getUsername());
+        userDTO.setType(user.getType());
         userDTO.setPasswordHash(user.getPasswordHash());
         return userDTO;
     }
@@ -65,6 +66,7 @@ public class UserService {
     private User mapToEntity(final UserDTO userDTO, final User user) {
         user.setFullName(userDTO.getFullName());
         user.setUsername(userDTO.getUsername());
+        user.setType(userDTO.getType());
         user.setPasswordHash(userDTO.getPasswordHash());
         return user;
     }

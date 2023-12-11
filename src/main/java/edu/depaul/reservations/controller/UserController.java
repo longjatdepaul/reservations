@@ -1,5 +1,6 @@
 package edu.depaul.reservations.controller;
 
+import edu.depaul.reservations.model.UserType;
 import edu.depaul.reservations.model.UserDTO;
 import edu.depaul.reservations.service.UserService;
 import edu.depaul.reservations.util.WebUtils;
@@ -23,6 +24,11 @@ public class UserController {
 
     public UserController(final UserService userService) {
         this.userService = userService;
+    }
+
+    @ModelAttribute
+    public void prepareContext(final Model model) {
+        model.addAttribute("typeValues", UserType.values());
     }
 
     @GetMapping
