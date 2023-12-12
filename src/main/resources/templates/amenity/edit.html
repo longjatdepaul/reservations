@@ -19,6 +19,7 @@
                 <div th:replace="~{fragments/forms::inputRow(object='amenity', field='type', type='radio')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='amenity', field='capacity', type='number')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='amenity', field='rate', type='number')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='daysAvailable', type='multiselect')}" />
                 <input type="submit" th:value="#{amenity.edit.headline}" class="btn btn-primary mt-4" />
             </form>
         </div>

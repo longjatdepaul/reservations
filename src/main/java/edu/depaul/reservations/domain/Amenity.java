@@ -1,16 +1,12 @@
 package edu.depaul.reservations.domain;
 
 import edu.depaul.reservations.model.AmenityType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import edu.depaul.reservations.model.DayOfWeekType;
+import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
+import java.util.Set;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -50,6 +46,13 @@ public class Amenity {
 
     @Column()
     private Double rate;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "DaysAvailable",
+            joinColumns = @JoinColumn(name = "amenityId")
+    )
+    private Set<DayOfWeekType> daysAvailable;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+
 
 @Getter
 @Setter
@@ -23,4 +25,6 @@ public class AmenityDTO {
     private Integer capacity;
 
     private Double rate;
+
+    private Set<DayOfWeekType> daysAvailable;
 }

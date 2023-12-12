@@ -2,6 +2,7 @@ package edu.depaul.reservations.controller;
 
 import edu.depaul.reservations.model.AmenityDTO;
 import edu.depaul.reservations.model.AmenityType;
+import edu.depaul.reservations.model.DayOfWeekType;
 import edu.depaul.reservations.service.AmenityService;
 import edu.depaul.reservations.util.WebUtils;
 import jakarta.validation.Valid;
@@ -29,6 +30,7 @@ public class AmenityController {
     @ModelAttribute
     public void prepareContext(final Model model) {
         model.addAttribute("typeValues", AmenityType.values());
+        model.addAttribute("daysAvailableValues", DayOfWeekType.values());
     }
 
     @GetMapping

@@ -67,6 +67,7 @@ public class AmenityService {
         amenityDTO.setType(amenity.getType());
         amenityDTO.setCapacity(amenity.getCapacity());
         amenityDTO.setRate(amenity.getRate());
+        amenityDTO.setDaysAvailable(amenity.getDaysAvailable());
         return amenityDTO;
     }
 
@@ -75,6 +76,7 @@ public class AmenityService {
         amenity.setType(amenityDTO.getType());
         amenity.setCapacity(amenityDTO.getCapacity());
         amenity.setRate(amenityDTO.getRate());
+        amenity.setDaysAvailable(amenityDTO.getDaysAvailable());
         return amenity;
     }
 
