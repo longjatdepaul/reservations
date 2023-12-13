@@ -1,8 +1,7 @@
 package edu.depaul.reservations.service;
 
-import edu.depaul.reservations.domain.Amenity;
-import edu.depaul.reservations.domain.Reservation;
-import edu.depaul.reservations.model.AmenityDTO;
+import edu.depaul.reservations.model.Amenity;
+import edu.depaul.reservations.model.Reservation;
 import edu.depaul.reservations.repos.AmenityRepository;
 import edu.depaul.reservations.repos.ReservationRepository;
 import edu.depaul.reservations.util.NotFoundException;
@@ -26,29 +25,22 @@ public class AmenityService {
         this.reservationRepository = reservationRepository;
     }
 
-    public List<AmenityDTO> findAll() {
-        final List<Amenity> amenities = amenityRepository.findAll(Sort.by("id"));
-        return amenities.stream()
-                .map(amenity -> mapToDTO(amenity, new AmenityDTO()))
-                .toList();
+    public List<Amenity> findAll() {
+        return amenityRepository.findAll(Sort.by("id"));
     }
 
-    public AmenityDTO get(final Long id) {
+    public Amenity get(final Long id) {
         return amenityRepository.findById(id)
-                .map(amenity -> mapToDTO(amenity, new AmenityDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final AmenityDTO amenityDTO) {
-        final Amenity amenity = new Amenity();
-        mapToEntity(amenityDTO, amenity);
+    public Long create(final Amenity amenity) {
         return amenityRepository.save(amenity).getId();
     }
 
-    public void update(final Long id, final AmenityDTO amenityDTO) {
-        final Amenity amenity = amenityRepository.findById(id)
+    public void update(final Long id, final Amenity amenity) {
+        amenityRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(amenityDTO, amenity);
         amenityRepository.save(amenity);
     }
 
@@ -59,25 +51,6 @@ public class AmenityService {
         reservationRepository.findAllByAmenities(amenity)
                 .forEach(reservation -> reservation.getAmenities().remove(amenity));
         amenityRepository.delete(amenity);
-    }
-
-    private AmenityDTO mapToDTO(final Amenity amenity, final AmenityDTO amenityDTO) {
-        amenityDTO.setId(amenity.getId());
-        amenityDTO.setName(amenity.getName());
-        amenityDTO.setType(amenity.getType());
-        amenityDTO.setCapacity(amenity.getCapacity());
-        amenityDTO.setRate(amenity.getRate());
-        amenityDTO.setDaysAvailable(amenity.getDaysAvailable());
-        return amenityDTO;
-    }
-
-    private Amenity mapToEntity(final AmenityDTO amenityDTO, final Amenity amenity) {
-        amenity.setName(amenityDTO.getName());
-        amenity.setType(amenityDTO.getType());
-        amenity.setCapacity(amenityDTO.getCapacity());
-        amenity.setRate(amenityDTO.getRate());
-        amenity.setDaysAvailable(amenityDTO.getDaysAvailable());
-        return amenity;
     }
 
     public boolean nameExists(final String name) {

@@ -1,4 +1,4 @@
-package edu.depaul.reservations.domain;
+package edu.depaul.reservations.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

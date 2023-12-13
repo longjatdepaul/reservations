@@ -1,6 +1,6 @@
 package edu.depaul.reservations.rest;
 
-import edu.depaul.reservations.model.UserDTO;
+import edu.depaul.reservations.model.User;
 import edu.depaul.reservations.service.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -29,26 +29,26 @@ public class UserResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable(name = "id") final Long id) {
+    public ResponseEntity<User> getUser(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(userService.get(id));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createUser(@RequestBody @Valid final UserDTO userDTO) {
-        final Long createdId = userService.create(userDTO);
+    public ResponseEntity<Long> createUser(@RequestBody @Valid final User user) {
+        final Long createdId = userService.create(user);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateUser(@PathVariable(name = "id") final Long id,
-            @RequestBody @Valid final UserDTO userDTO) {
-        userService.update(id, userDTO);
+            @RequestBody @Valid final User user) {
+        userService.update(id, user);
         return ResponseEntity.ok(id);
     }
 

@@ -1,10 +1,9 @@
 package edu.depaul.reservations.rest;
 
-import edu.depaul.reservations.model.ReservationDTO;
+import edu.depaul.reservations.model.Reservation;
 import edu.depaul.reservations.service.ReservationService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @RestController
@@ -29,27 +30,27 @@ public class ReservationResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationDTO>> getAllReservations() {
+    public ResponseEntity<List<Reservation>> getAllReservations() {
         return ResponseEntity.ok(reservationService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReservationDTO> getReservation(@PathVariable(name = "id") final Long id) {
+    public ResponseEntity<Reservation> getReservation(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(reservationService.get(id));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createReservation(
-            @RequestBody @Valid final ReservationDTO reservationDTO) {
-        final Long createdId = reservationService.create(reservationDTO);
+            @RequestBody @Valid final Reservation reservation) {
+        final Long createdId = reservationService.create(reservation);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateReservation(@PathVariable(name = "id") final Long id,
-            @RequestBody @Valid final ReservationDTO reservationDTO) {
-        reservationService.update(id, reservationDTO);
+            @RequestBody @Valid final Reservation reservation) {
+        reservationService.update(id, reservation);
         return ResponseEntity.ok(id);
     }
 

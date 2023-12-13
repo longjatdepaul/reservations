@@ -1,12 +1,9 @@
-package edu.depaul.reservations.domain;
+package edu.depaul.reservations.model;
 
-import edu.depaul.reservations.model.AmenityType;
-import edu.depaul.reservations.model.DayOfWeekType;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 import java.util.Set;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,10 +12,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 @Entity
+@Table(name = "\"User\"")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class Amenity {
+public class User {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -35,24 +33,20 @@ public class Amenity {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 256)
-    private String name;
+    private String fullName;
+
+    @Column(nullable = false, unique = true, length = 16)
+    private String username;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private AmenityType type;
+    private UserType type;
 
-    @Column(nullable = false)
-    private Integer capacity;
+    @Column(length = 256)
+    private String passwordHash;
 
-    @Column()
-    private Double rate;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "DaysAvailable",
-            joinColumns = @JoinColumn(name = "amenityId")
-    )
-    private Set<DayOfWeekType> daysAvailable;
+    @OneToMany(mappedBy = "user")
+    private Set<Reservation> reservations;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

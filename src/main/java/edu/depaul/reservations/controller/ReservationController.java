@@ -1,8 +1,8 @@
 package edu.depaul.reservations.controller;
 
-import edu.depaul.reservations.domain.Amenity;
-import edu.depaul.reservations.domain.User;
-import edu.depaul.reservations.model.ReservationDTO;
+import edu.depaul.reservations.model.Amenity;
+import edu.depaul.reservations.model.User;
+import edu.depaul.reservations.model.Reservation;
 import edu.depaul.reservations.repos.AmenityRepository;
 import edu.depaul.reservations.repos.UserRepository;
 import edu.depaul.reservations.service.ReservationService;
@@ -53,17 +53,17 @@ public class ReservationController {
     }
 
     @GetMapping("/add")
-    public String add(@ModelAttribute("reservation") final ReservationDTO reservationDTO) {
+    public String add(@ModelAttribute("reservation") final Reservation reservation) {
         return "reservation/add";
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("reservation") @Valid final ReservationDTO reservationDTO,
+    public String add(@ModelAttribute("reservation") @Valid final Reservation reservation,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "reservation/add";
         }
-        reservationService.create(reservationDTO);
+        reservationService.create(reservation);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("reservation.create.success"));
         return "redirect:/reservations";
     }
@@ -76,12 +76,12 @@ public class ReservationController {
 
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable(name = "id") final Long id,
-            @ModelAttribute("reservation") @Valid final ReservationDTO reservationDTO,
+            @ModelAttribute("reservation") @Valid final Reservation reservation,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             return "reservation/edit";
         }
-        reservationService.update(id, reservationDTO);
+        reservationService.update(id, reservation);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("reservation.update.success"));
         return "redirect:/reservations";
     }

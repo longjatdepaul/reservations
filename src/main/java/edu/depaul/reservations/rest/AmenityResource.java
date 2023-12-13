@@ -1,6 +1,6 @@
 package edu.depaul.reservations.rest;
 
-import edu.depaul.reservations.model.AmenityDTO;
+import edu.depaul.reservations.model.Amenity;
 import edu.depaul.reservations.service.AmenityService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -29,26 +29,26 @@ public class AmenityResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<AmenityDTO>> getAllAmenities() {
+    public ResponseEntity<List<Amenity>> getAllAmenities() {
         return ResponseEntity.ok(amenityService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AmenityDTO> getAmenity(@PathVariable(name = "id") final Long id) {
+    public ResponseEntity<Amenity> getAmenity(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(amenityService.get(id));
     }
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createAmenity(@RequestBody @Valid final AmenityDTO amenityDTO) {
-        final Long createdId = amenityService.create(amenityDTO);
+    public ResponseEntity<Long> createAmenity(@RequestBody @Valid final Amenity amenity) {
+        final Long createdId = amenityService.create(amenity);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateAmenity(@PathVariable(name = "id") final Long id,
-            @RequestBody @Valid final AmenityDTO amenityDTO) {
-        amenityService.update(id, amenityDTO);
+            @RequestBody @Valid final Amenity amenity) {
+        amenityService.update(id, amenity);
         return ResponseEntity.ok(id);
     }
 

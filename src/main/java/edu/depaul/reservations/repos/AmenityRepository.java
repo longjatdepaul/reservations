@@ -1,6 +1,6 @@
 package edu.depaul.reservations.repos;
 
-import edu.depaul.reservations.domain.Amenity;
+import edu.depaul.reservations.model.Amenity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

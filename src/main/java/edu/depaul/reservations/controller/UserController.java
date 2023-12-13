@@ -1,7 +1,7 @@
 package edu.depaul.reservations.controller;
 
 import edu.depaul.reservations.model.UserType;
-import edu.depaul.reservations.model.UserDTO;
+import edu.depaul.reservations.model.User;
 import edu.depaul.reservations.service.UserService;
 import edu.depaul.reservations.util.WebUtils;
 import jakarta.validation.Valid;
@@ -38,12 +38,12 @@ public class UserController {
     }
 
     @GetMapping("/add")
-    public String add(@ModelAttribute("user") final UserDTO userDTO) {
+    public String add(@ModelAttribute("user") final User user) {
         return "user/add";
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("user") @Valid final UserDTO userDTO,
+    public String add(@ModelAttribute("user") @Valid final User userDTO,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         if (!bindingResult.hasFieldErrors("fullName") && userService.fullNameExists(userDTO.getFullName())) {
             bindingResult.rejectValue("fullName", "Exists.user.fullName");
@@ -67,23 +67,23 @@ public class UserController {
 
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable(name = "id") final Long id,
-            @ModelAttribute("user") @Valid final UserDTO userDTO, final BindingResult bindingResult,
+            @ModelAttribute("user") @Valid final User user, final BindingResult bindingResult,
             final RedirectAttributes redirectAttributes) {
-        final UserDTO currentUserDTO = userService.get(id);
+        final User currentUser = userService.get(id);
         if (!bindingResult.hasFieldErrors("fullName") &&
-                !userDTO.getFullName().equalsIgnoreCase(currentUserDTO.getFullName()) &&
-                userService.fullNameExists(userDTO.getFullName())) {
+                !user.getFullName().equalsIgnoreCase(currentUser.getFullName()) &&
+                userService.fullNameExists(user.getFullName())) {
             bindingResult.rejectValue("fullName", "Exists.user.fullName");
         }
         if (!bindingResult.hasFieldErrors("username") &&
-                !userDTO.getUsername().equalsIgnoreCase(currentUserDTO.getUsername()) &&
-                userService.usernameExists(userDTO.getUsername())) {
+                !user.getUsername().equalsIgnoreCase(currentUser.getUsername()) &&
+                userService.usernameExists(user.getUsername())) {
             bindingResult.rejectValue("username", "Exists.user.username");
         }
         if (bindingResult.hasErrors()) {
             return "user/edit";
         }
-        userService.update(id, userDTO);
+        userService.update(id, user);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user.update.success"));
         return "redirect:/users";
     }

@@ -1,8 +1,8 @@
 package edu.depaul.reservations.repos;
 
-import edu.depaul.reservations.domain.Amenity;
-import edu.depaul.reservations.domain.Reservation;
-import edu.depaul.reservations.domain.User;
+import edu.depaul.reservations.model.Amenity;
+import edu.depaul.reservations.model.Reservation;
+import edu.depaul.reservations.model.User;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

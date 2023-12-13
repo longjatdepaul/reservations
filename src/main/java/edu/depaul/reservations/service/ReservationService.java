@@ -1,9 +1,8 @@
 package edu.depaul.reservations.service;
 
-import edu.depaul.reservations.domain.Amenity;
-import edu.depaul.reservations.domain.Reservation;
-import edu.depaul.reservations.domain.User;
-import edu.depaul.reservations.model.ReservationDTO;
+import edu.depaul.reservations.model.Amenity;
+import edu.depaul.reservations.model.Reservation;
+import edu.depaul.reservations.model.User;
 import edu.depaul.reservations.repos.AmenityRepository;
 import edu.depaul.reservations.repos.ReservationRepository;
 import edu.depaul.reservations.repos.UserRepository;
@@ -31,64 +30,27 @@ public class ReservationService {
         this.amenityRepository = amenityRepository;
     }
 
-    public List<ReservationDTO> findAll() {
-        final List<Reservation> reservations = reservationRepository.findAll(Sort.by("id"));
-        return reservations.stream()
-                .map(reservation -> mapToDTO(reservation, new ReservationDTO()))
-                .toList();
+    public List<Reservation> findAll() {
+        return reservationRepository.findAll(Sort.by("id"));
     }
 
-    public ReservationDTO get(final Long id) {
+    public Reservation get(final Long id) {
         return reservationRepository.findById(id)
-                .map(reservation -> mapToDTO(reservation, new ReservationDTO()))
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final ReservationDTO reservationDTO) {
-        final Reservation reservation = new Reservation();
-        mapToEntity(reservationDTO, reservation);
+    public Long create(final Reservation reservation) {
         return reservationRepository.save(reservation).getId();
     }
 
-    public void update(final Long id, final ReservationDTO reservationDTO) {
-        final Reservation reservation = reservationRepository.findById(id)
+    public void update(final Long id, final Reservation reservation) {
+        reservationRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
-        mapToEntity(reservationDTO, reservation);
         reservationRepository.save(reservation);
     }
 
     public void delete(final Long id) {
         reservationRepository.deleteById(id);
-    }
-
-    private ReservationDTO mapToDTO(final Reservation reservation,
-            final ReservationDTO reservationDTO) {
-        reservationDTO.setId(reservation.getId());
-        reservationDTO.setReservationDate(reservation.getReservationDate());
-        reservationDTO.setStartTime(reservation.getStartTime());
-        reservationDTO.setEndTime(reservation.getEndTime());
-        reservationDTO.setUser(reservation.getUser() == null ? null : reservation.getUser().getId());
-        reservationDTO.setAmenities(reservation.getAmenities().stream()
-                .map(amenity -> amenity.getId())
-                .toList());
-        return reservationDTO;
-    }
-
-    private Reservation mapToEntity(final ReservationDTO reservationDTO,
-            final Reservation reservation) {
-        reservation.setReservationDate(reservationDTO.getReservationDate());
-        reservation.setStartTime(reservationDTO.getStartTime());
-        reservation.setEndTime(reservationDTO.getEndTime());
-        final User user = reservationDTO.getUser() == null ? null : userRepository.findById(reservationDTO.getUser())
-                .orElseThrow(() -> new NotFoundException("user not found"));
-        reservation.setUser(user);
-        final List<Amenity> amenities = amenityRepository.findAllById(
-                reservationDTO.getAmenities() == null ? Collections.emptyList() : reservationDTO.getAmenities());
-        if (amenities.size() != (reservationDTO.getAmenities() == null ? 0 : reservationDTO.getAmenities().size())) {
-            throw new NotFoundException("one of amenities not found");
-        }
-        reservation.setAmenities(amenities.stream().collect(Collectors.toSet()));
-        return reservation;
     }
 
 }

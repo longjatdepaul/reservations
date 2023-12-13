@@ -1,6 +1,6 @@
 package edu.depaul.reservations.controller;
 
-import edu.depaul.reservations.model.AmenityDTO;
+import edu.depaul.reservations.model.Amenity;
 import edu.depaul.reservations.model.AmenityType;
 import edu.depaul.reservations.model.DayOfWeekType;
 import edu.depaul.reservations.service.AmenityService;
@@ -40,20 +40,20 @@ public class AmenityController {
     }
 
     @GetMapping("/add")
-    public String add(@ModelAttribute("amenity") final AmenityDTO amenityDTO) {
+    public String add(@ModelAttribute("amenity") final Amenity amenity) {
         return "amenity/add";
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("amenity") @Valid final AmenityDTO amenityDTO,
+    public String add(@ModelAttribute("amenity") @Valid final Amenity amenity,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (!bindingResult.hasFieldErrors("name") && amenityService.nameExists(amenityDTO.getName())) {
+        if (!bindingResult.hasFieldErrors("name") && amenityService.nameExists(amenity.getName())) {
             bindingResult.rejectValue("name", "Exists.amenity.name");
         }
         if (bindingResult.hasErrors()) {
             return "amenity/add";
         }
-        amenityService.create(amenityDTO);
+        amenityService.create(amenity);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("amenity.create.success"));
         return "redirect:/amenities";
     }
@@ -66,18 +66,18 @@ public class AmenityController {
 
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable(name = "id") final Long id,
-            @ModelAttribute("amenity") @Valid final AmenityDTO amenityDTO,
+            @ModelAttribute("amenity") @Valid final Amenity amenity,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        final AmenityDTO currentAmenityDTO = amenityService.get(id);
+        final Amenity currentAmenity = amenityService.get(id);
         if (!bindingResult.hasFieldErrors("name") &&
-                !amenityDTO.getName().equalsIgnoreCase(currentAmenityDTO.getName()) &&
-                amenityService.nameExists(amenityDTO.getName())) {
+                !amenity.getName().equalsIgnoreCase(currentAmenity.getName()) &&
+                amenityService.nameExists(amenity.getName())) {
             bindingResult.rejectValue("name", "Exists.amenity.name");
         }
         if (bindingResult.hasErrors()) {
             return "amenity/edit";
         }
-        amenityService.update(id, amenityDTO);
+        amenityService.update(id, amenity);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("amenity.update.success"));
         return "redirect:/amenities";
     }

@@ -1,6 +1,6 @@
 package edu.depaul.reservations.repos;
 
-import edu.depaul.reservations.domain.User;
+import edu.depaul.reservations.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 
