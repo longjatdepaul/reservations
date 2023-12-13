@@ -43,18 +43,18 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute("user") @Valid final User userDTO,
+    public String add(@ModelAttribute("user") @Valid final User user,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (!bindingResult.hasFieldErrors("fullName") && userService.fullNameExists(userDTO.getFullName())) {
+        if (!bindingResult.hasFieldErrors("fullName") && userService.fullNameExists(user.getFullName())) {
             bindingResult.rejectValue("fullName", "Exists.user.fullName");
         }
-        if (!bindingResult.hasFieldErrors("username") && userService.usernameExists(userDTO.getUsername())) {
+        if (!bindingResult.hasFieldErrors("username") && userService.usernameExists(user.getUsername())) {
             bindingResult.rejectValue("username", "Exists.user.username");
         }
         if (bindingResult.hasErrors()) {
             return "user/add";
         }
-        userService.create(userDTO);
+        userService.create(user);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user.create.success"));
         return "redirect:/users";
     }
