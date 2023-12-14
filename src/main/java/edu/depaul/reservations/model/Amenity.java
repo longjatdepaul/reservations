@@ -35,6 +35,13 @@ public class Amenity {
     @Column(nullable = false, unique = true, length = 256)
     private String name;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
+
+    @Column(length = 256)
+    private String location;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AmenityType type;
@@ -60,4 +67,7 @@ public class Amenity {
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
 
+    public String toString() {
+        return name;
+    }
 }

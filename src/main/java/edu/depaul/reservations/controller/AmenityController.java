@@ -1,11 +1,12 @@
 package edu.depaul.reservations.controller;
 
-import edu.depaul.reservations.model.Amenity;
-import edu.depaul.reservations.model.AmenityType;
-import edu.depaul.reservations.model.DayOfWeekType;
+import edu.depaul.reservations.model.*;
+import edu.depaul.reservations.repos.AddressRepository;
 import edu.depaul.reservations.service.AmenityService;
+import edu.depaul.reservations.util.CustomCollectors;
 import edu.depaul.reservations.util.WebUtils;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,15 +23,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AmenityController {
 
     private final AmenityService amenityService;
+    private final AddressRepository addressRepository;
 
-    public AmenityController(final AmenityService amenityService) {
+    public AmenityController(final AmenityService amenityService,
+                             final AddressRepository addressRepository) {
         this.amenityService = amenityService;
+        this.addressRepository = addressRepository;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
         model.addAttribute("typeValues", AmenityType.values());
         model.addAttribute("daysAvailableValues", DayOfWeekType.values());
+        model.addAttribute("addressValues", addressRepository.findAll(Sort.by("id"))
+                .stream()
+                .collect(CustomCollectors.toSortedMap(Address::getId, Address::getName)));
     }
 
     @GetMapping

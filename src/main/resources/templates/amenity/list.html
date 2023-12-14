@@ -19,6 +19,8 @@
                         <tr>
                             <th scope="col">[[#{amenity.id.label}]]</th>
                             <th scope="col">[[#{amenity.name.label}]]</th>
+                            <th scope="col">[[#{amenity.address.label}]]</th>
+                            <th scope="col">[[#{amenity.location.label}]]</th>
                             <th scope="col">[[#{amenity.type.label}]]</th>
                             <th scope="col">[[#{amenity.capacity.label}]]</th>
                             <th scope="col">[[#{amenity.rate.label}]]</th>
@@ -29,6 +31,8 @@
                         <tr th:each="amenity : ${amenities}">
                             <td>[[${amenity.id}]]</td>
                             <td>[[${amenity.name}]]</td>
+                            <td>[[${amenity.address}]]</td>
+                            <td>[[${amenity.location}]]</td>
                             <td>[[${amenity.type}]]</td>
                             <td>[[${amenity.capacity}]]</td>
                             <td>[[${amenity.rate}]]</td>

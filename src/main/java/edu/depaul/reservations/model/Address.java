@@ -1,22 +1,20 @@
 package edu.depaul.reservations.model;
 
 import jakarta.persistence.*;
-
-import java.time.OffsetDateTime;
-import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.OffsetDateTime;
+
 
 @Entity
-@Table(name = "\"User\"")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class User {
+public class Address {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -33,20 +31,20 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true, length = 256)
-    private String fullName;
+    private String name;
 
-    @Column(nullable = false, unique = true, length = 16)
-    private String username;
+    @Column(nullable = false, length = 256)
+    private String street;
+
+    @Column(nullable = false, length = 256)
+    private String city;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserType type;
+    private StateType state;
 
-    @Column(length = 256)
-    private String passwordHash;
-
-    @OneToMany(mappedBy = "user")
-    private Set<Reservation> reservations;
+    @Column(nullable = false, length = 16)
+    private String zip;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -57,6 +55,6 @@ public class User {
     private OffsetDateTime lastUpdated;
 
     public String toString() {
-        return fullName;
+        return name;
     }
 }

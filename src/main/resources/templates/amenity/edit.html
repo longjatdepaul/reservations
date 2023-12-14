@@ -16,6 +16,8 @@
             <form th:action="${requestUri}" method="post">
                 <div th:replace="~{fragments/forms::inputRow(object='amenity', field='id', disabled=true, type='number')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='amenity', field='name')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='address', type='select')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='location')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='amenity', field='type', type='radio')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='amenity', field='capacity', type='number')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='amenity', field='rate', type='number')}" />
