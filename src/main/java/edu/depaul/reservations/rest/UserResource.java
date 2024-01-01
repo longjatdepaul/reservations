@@ -3,7 +3,7 @@ package edu.depaul.reservations.rest;
 import edu.depaul.reservations.model.User;
 import edu.depaul.reservations.service.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

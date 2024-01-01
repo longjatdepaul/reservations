@@ -51,10 +51,10 @@ public class RestExceptionHandler {
     public ResponseEntity<ErrorResponse> handleResponseStatus(
             final ResponseStatusException exception) {
         final ErrorResponse errorResponse = new ErrorResponse();
-        errorResponse.setHttpStatus(exception.getStatusCode().value());
+        errorResponse.setHttpStatus(exception.getStatus().value());
         errorResponse.setException(exception.getClass().getSimpleName());
         errorResponse.setMessage(exception.getMessage());
-        return new ResponseEntity<>(errorResponse, exception.getStatusCode());
+        return new ResponseEntity<>(errorResponse, exception.getStatus());
     }
 
     @ExceptionHandler(Throwable.class)

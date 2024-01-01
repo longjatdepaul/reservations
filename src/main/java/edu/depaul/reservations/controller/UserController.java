@@ -4,7 +4,7 @@ import edu.depaul.reservations.model.UserType;
 import edu.depaul.reservations.model.User;
 import edu.depaul.reservations.service.UserService;
 import edu.depaul.reservations.util.WebUtils;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

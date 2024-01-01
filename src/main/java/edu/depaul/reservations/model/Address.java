@@ -1,8 +1,7 @@
 package edu.depaul.reservations.model;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import javax.persistence.*;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,6 +13,9 @@ import java.time.OffsetDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
 
     @Id
@@ -53,6 +55,17 @@ public class Address {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+
+    @PrePersist
+    public void prePersist() {
+        dateCreated = OffsetDateTime.now();
+        lastUpdated = dateCreated;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        lastUpdated = OffsetDateTime.now();
+    }
 
     public String toString() {
         return name;

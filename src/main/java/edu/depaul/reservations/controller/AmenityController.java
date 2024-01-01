@@ -5,7 +5,7 @@ import edu.depaul.reservations.repos.AddressRepository;
 import edu.depaul.reservations.service.AmenityService;
 import edu.depaul.reservations.util.CustomCollectors;
 import edu.depaul.reservations.util.WebUtils;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

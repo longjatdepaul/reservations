@@ -1,32 +1,27 @@
 package edu.depaul.reservations.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
+import javax.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
+
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Entity
+@Table
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Reservation {
 
     @Id
@@ -43,12 +38,15 @@ public class Reservation {
     )
     private Long id;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
     private LocalDate reservationDate;
 
+    @DateTimeFormat(pattern = "HH:mm")
     @Column
     private LocalTime startTime;
 
+    @DateTimeFormat(pattern = "HH:mm")
     @Column
     private LocalTime endTime;
 
@@ -71,5 +69,29 @@ public class Reservation {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AmenityType amenityType;
+
+    @PrePersist
+    public void prePersist() {
+        dateCreated = OffsetDateTime.now();
+        lastUpdated = dateCreated;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        lastUpdated = OffsetDateTime.now();
+    }
+
+    public Reservation(LocalDate reservationDate, LocalTime startTime,
+                       LocalTime endTime, User user, AmenityType amenityType) {
+        this.reservationDate = reservationDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.user = user;
+        this.amenityType = amenityType;
+    }
 
 }

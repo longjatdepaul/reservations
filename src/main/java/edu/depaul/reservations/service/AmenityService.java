@@ -6,7 +6,7 @@ import edu.depaul.reservations.repos.AmenityRepository;
 import edu.depaul.reservations.repos.ReservationRepository;
 import edu.depaul.reservations.util.NotFoundException;
 import edu.depaul.reservations.util.WebUtils;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import java.util.List;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

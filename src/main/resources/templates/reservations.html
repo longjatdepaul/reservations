@@ -23,7 +23,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="reservation : ${user.getReservations()}">
+            <tr th:each="reservation : ${session.user.getReservations()}">
                 <td th:text="${reservation.getAmenityType()}"></td>
                 <td th:text="${reservation.getReservationDate()}"></td>
                 <td th:text="${reservation.getStartTime()}"></td>
@@ -32,20 +32,12 @@
             </tbody>
         </table>
 
-        <button
-                type="button"
-                class="btn btn-primary"
-                data-toggle="modal"
-                data-target="#createReservationModal"
-        >
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createReservationModal">
             Create Reservation
         </button>
 
         <!-- Modal -->
-        <div
-                th:insert="fragments/modal :: modal"
-                th:with="reservation=${reservation}"
-        ></div>
+        <div th:insert="fragments/modal :: modal" th:with="reservation=${reservation}"></div>
     </div>
 </div>
 

@@ -8,7 +8,7 @@ import edu.depaul.reservations.repos.UserRepository;
 import edu.depaul.reservations.service.ReservationService;
 import edu.depaul.reservations.util.CustomCollectors;
 import edu.depaul.reservations.util.WebUtils;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
-@RequestMapping("/reservations")
+@RequestMapping("/obs-reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -65,7 +65,7 @@ public class ReservationController {
         }
         reservationService.create(reservation);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("reservation.create.success"));
-        return "redirect:/reservations";
+        return "redirect:/obs-reservations";
     }
 
     @GetMapping("/edit/{id}")
@@ -83,7 +83,7 @@ public class ReservationController {
         }
         reservationService.update(id, reservation);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("reservation.update.success"));
-        return "redirect:/reservations";
+        return "redirect:/obs-reservations";
     }
 
     @PostMapping("/delete/{id}")
@@ -91,7 +91,7 @@ public class ReservationController {
             final RedirectAttributes redirectAttributes) {
         reservationService.delete(id);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("reservation.delete.success"));
-        return "redirect:/reservations";
+        return "redirect:/obs-reservations";
     }
 
 }

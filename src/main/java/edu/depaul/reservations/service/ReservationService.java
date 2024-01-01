@@ -1,16 +1,12 @@
 package edu.depaul.reservations.service;
 
-import edu.depaul.reservations.model.Amenity;
+import edu.depaul.reservations.exception.CapacityFullException;
 import edu.depaul.reservations.model.Reservation;
-import edu.depaul.reservations.model.User;
-import edu.depaul.reservations.repos.AmenityRepository;
+import edu.depaul.reservations.repos.CapacityRepository;
 import edu.depaul.reservations.repos.ReservationRepository;
-import edu.depaul.reservations.repos.UserRepository;
 import edu.depaul.reservations.util.NotFoundException;
-import jakarta.transaction.Transactional;
-import java.util.Collections;
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +16,12 @@ import org.springframework.stereotype.Service;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final UserRepository userRepository;
-    private final AmenityRepository amenityRepository;
+    private final CapacityRepository capacityRepository;
 
     public ReservationService(final ReservationRepository reservationRepository,
-            final UserRepository userRepository, final AmenityRepository amenityRepository) {
+                              final CapacityRepository capacityRepository) {
         this.reservationRepository = reservationRepository;
-        this.userRepository = userRepository;
-        this.amenityRepository = amenityRepository;
+        this.capacityRepository = capacityRepository;
     }
 
     public List<Reservation> findAll() {
@@ -40,6 +34,18 @@ public class ReservationService {
     }
 
     public Long create(final Reservation reservation) {
+
+        int capacity = capacityRepository.findByAmenityType(reservation.getAmenityType()).getCapacity();
+        int overlappingReservations = reservationRepository
+                .findReservationsByReservationDateAndStartTimeBeforeAndEndTimeAfterOrStartTimeBetween(
+                        reservation.getReservationDate(),
+                        reservation.getStartTime(), reservation.getEndTime(),
+                        reservation.getStartTime(), reservation.getEndTime()).size();
+
+        if (overlappingReservations >= capacity) {
+            throw new CapacityFullException("This amenity's capacity is full at desired time");
+        }
+
         return reservationRepository.save(reservation).getId();
     }
 

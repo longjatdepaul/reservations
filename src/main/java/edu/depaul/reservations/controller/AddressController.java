@@ -4,7 +4,7 @@ import edu.depaul.reservations.model.Address;
 import edu.depaul.reservations.model.StateType;
 import edu.depaul.reservations.service.AddressService;
 import edu.depaul.reservations.util.WebUtils;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
