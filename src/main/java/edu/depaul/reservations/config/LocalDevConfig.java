@@ -1,6 +1,8 @@
 package edu.depaul.reservations.config;
 
 import java.io.File;
+import java.util.Objects;
+
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -19,7 +21,7 @@ public class LocalDevConfig {
     @SneakyThrows
     public LocalDevConfig(final TemplateEngine templateEngine) {
         File sourceRoot = new ClassPathResource("application.yml").getFile().getParentFile();
-        while (sourceRoot.listFiles((dir, name) -> name.equals("mvnw")).length != 1) {
+        while (Objects.requireNonNull(sourceRoot.listFiles((dir, name) -> name.equals("mvnw"))).length != 1) {
             sourceRoot = sourceRoot.getParentFile();
         }
         final FileTemplateResolver fileTemplateResolver = new FileTemplateResolver();

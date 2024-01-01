@@ -9,7 +9,7 @@ public enum AmenityType {
 
     private final String name;
 
-    private AmenityType(String value) {
+    AmenityType(String value) {
         name = value;
     }
 

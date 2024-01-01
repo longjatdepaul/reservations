@@ -6,7 +6,6 @@ import java.time.OffsetDateTime;
 import java.util.Set;
 
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

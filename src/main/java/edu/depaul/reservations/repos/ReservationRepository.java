@@ -19,6 +19,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     List<Reservation> findAllByAmenities(Amenity amenity);
 
+    @SuppressWarnings("unused")
     List<Reservation> findReservationsByAmenityType(AmenityType amenityType);
 
     List<Reservation> findReservationsByReservationDateAndStartTimeBeforeAndEndTimeAfterOrStartTimeBetween

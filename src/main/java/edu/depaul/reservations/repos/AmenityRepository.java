@@ -12,6 +12,7 @@ public interface AmenityRepository extends JpaRepository<Amenity, Long> {
 
     Amenity findFirstByAddress(Address address);
 
+    @SuppressWarnings("unused")
     Amenity findByType(AmenityType amenityType);
 
 }
