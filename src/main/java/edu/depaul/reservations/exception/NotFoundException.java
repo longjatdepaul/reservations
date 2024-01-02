@@ -1,4 +1,4 @@
-package edu.depaul.reservations.util;
+package edu.depaul.reservations.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -3,7 +3,7 @@ package edu.depaul.reservations;
 import edu.depaul.reservations.model.Reservation;
 import edu.depaul.reservations.model.User;
 import edu.depaul.reservations.service.ReservationService;
-import edu.depaul.reservations.service.UserService;
+import edu.depaul.reservations.service.UserServiceAPI;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
-import java.util.Set;
+//import java.util.Set;
 
 
 @Controller
 public class PagesController {
 
-    final UserService userService;
+    final UserServiceAPI userService;
     final ReservationService reservationService;
 
-    public PagesController(UserService userService, ReservationService reservationService) {
+    public PagesController(UserServiceAPI userService, ReservationService reservationService) {
         this.userService = userService;
         this.reservationService = reservationService;
     }
@@ -38,7 +38,7 @@ public class PagesController {
     public String reservations(Model model, HttpSession session) {
         UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String name = principal.getUsername();
-        User user = userService.getUserByUsername(name);
+        User user = userService.get(name);
 
         // This should always be the case
         if (user != null) {
@@ -59,12 +59,12 @@ public class PagesController {
                                      Model model, @SessionAttribute("user") User user) {
         // Save to DB after updating
         assert user != null;
-        reservation.setUser(user);
+        reservation.setUser(user.username());
         reservationService.create(reservation);
-        Set<Reservation> userReservations = user.getReservations();
-        userReservations.add(reservation);
-        user.setReservations(userReservations);
-        userService.update(user.getId(), user);
+        //Set<Reservation> userReservations = user.getReservations();
+        //userReservations.add(reservation);
+        //user.setReservations(userReservations);
+        //userService.update(user.getId(), user);
         return "redirect:/reservations";
     }
 

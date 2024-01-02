@@ -4,7 +4,7 @@ import edu.depaul.reservations.exception.CapacityFullException;
 import edu.depaul.reservations.model.Reservation;
 import edu.depaul.reservations.repos.CapacityRepository;
 import edu.depaul.reservations.repos.ReservationRepository;
-import edu.depaul.reservations.util.NotFoundException;
+import edu.depaul.reservations.exception.NotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 import org.springframework.data.domain.Sort;

@@ -50,9 +50,8 @@ public class Reservation {
     @Column
     private LocalTime endTime;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @Column(nullable = false)
+    private String user;
 
     @ManyToMany
     @JoinTable(
@@ -86,7 +85,7 @@ public class Reservation {
     }
 
     public Reservation(LocalDate reservationDate, LocalTime startTime,
-                       LocalTime endTime, User user, AmenityType amenityType) {
+                       LocalTime endTime, String user, AmenityType amenityType) {
         this.reservationDate = reservationDate;
         this.startTime = startTime;
         this.endTime = endTime;

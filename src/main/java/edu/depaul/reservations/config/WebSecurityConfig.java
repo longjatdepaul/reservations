@@ -18,7 +18,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final String[] SECURITY_IGNORED_ENDPOINTS = {
-            "/h2-console/**", "/h2/**", "/webjars/**"
+            "/h2-console/**", "/h2/**", "/webjars/**", "/api/**"
     };
 
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {

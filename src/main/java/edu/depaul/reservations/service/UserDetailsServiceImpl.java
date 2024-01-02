@@ -1,7 +1,6 @@
 package edu.depaul.reservations.service;
 
 import edu.depaul.reservations.model.User;
-import edu.depaul.reservations.repos.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,20 +9,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    final private UserRepository userRepository;
+    final private UserServiceAPI userService;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserDetailsServiceImpl(UserServiceAPI userService) {
+        this.userService = userService;
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        final User user = userRepository.findUserByUsername(username);
+        final User user = userService.get(username);
 
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
 
         return org.springframework.security.core.userdetails.User.withUsername(
-                user.getUsername()).password(user.getPasswordHash()).roles("USER").build();
+                user.username()).password(user.passwordHash()).roles("USER").build();
     }
 }

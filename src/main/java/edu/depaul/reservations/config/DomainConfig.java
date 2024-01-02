@@ -2,6 +2,7 @@ package edu.depaul.reservations.config;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
+
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +13,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @Configuration
-@EntityScan("edu.depaul.reservations.domain")
-@EnableJpaRepositories("edu.depaul.reservations.repos")
+@EntityScan(basePackages = {
+        "edu.depaul.reservations.api.users.model"
+})
+@EnableJpaRepositories(basePackages = {
+        "edu.depaul.reservations.repos",
+        "edu.depaul.reservations.api.users.repos"
+})
 @EnableTransactionManagement
 @EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 public class DomainConfig {

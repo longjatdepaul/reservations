@@ -1,7 +1,9 @@
-package edu.depaul.reservations.repos;
+package edu.depaul.reservations.api.users.repos;
 
-import edu.depaul.reservations.model.User;
+import edu.depaul.reservations.api.users.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
 
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -10,5 +12,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByUsernameIgnoreCase(String username);
 
-    User findUserByUsername(String username);
+    Optional<User> findUserByUsername(String username);
 }

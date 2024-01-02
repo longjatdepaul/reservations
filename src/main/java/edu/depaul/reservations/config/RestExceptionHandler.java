@@ -2,7 +2,7 @@ package edu.depaul.reservations.config;
 
 import edu.depaul.reservations.model.ErrorResponse;
 import edu.depaul.reservations.model.FieldError;
-import edu.depaul.reservations.util.NotFoundException;
+import edu.depaul.reservations.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import org.springframework.http.HttpStatus;

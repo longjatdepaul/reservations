@@ -4,7 +4,7 @@ import edu.depaul.reservations.model.Amenity;
 import edu.depaul.reservations.model.Reservation;
 import edu.depaul.reservations.repos.AmenityRepository;
 import edu.depaul.reservations.repos.ReservationRepository;
-import edu.depaul.reservations.util.NotFoundException;
+import edu.depaul.reservations.exception.NotFoundException;
 import edu.depaul.reservations.util.WebUtils;
 import javax.transaction.Transactional;
 import java.util.List;

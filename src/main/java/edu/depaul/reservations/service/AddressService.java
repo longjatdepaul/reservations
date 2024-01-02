@@ -4,7 +4,7 @@ import edu.depaul.reservations.model.Address;
 import edu.depaul.reservations.model.Amenity;
 import edu.depaul.reservations.repos.AddressRepository;
 import edu.depaul.reservations.repos.AmenityRepository;
-import edu.depaul.reservations.util.NotFoundException;
+import edu.depaul.reservations.exception.NotFoundException;
 import edu.depaul.reservations.util.WebUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

@@ -4,8 +4,8 @@ import edu.depaul.reservations.model.Amenity;
 import edu.depaul.reservations.model.User;
 import edu.depaul.reservations.model.Reservation;
 import edu.depaul.reservations.repos.AmenityRepository;
-import edu.depaul.reservations.repos.UserRepository;
 import edu.depaul.reservations.service.ReservationService;
+import edu.depaul.reservations.service.UserServiceAPI;
 import edu.depaul.reservations.util.CustomCollectors;
 import edu.depaul.reservations.util.WebUtils;
 import javax.validation.Valid;
@@ -26,21 +26,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ReservationController {
 
     private final ReservationService reservationService;
-    private final UserRepository userRepository;
+    private final UserServiceAPI userService;
     private final AmenityRepository amenityRepository;
 
     public ReservationController(final ReservationService reservationService,
-            final UserRepository userRepository, final AmenityRepository amenityRepository) {
+                                 final UserServiceAPI userService, final AmenityRepository amenityRepository) {
         this.reservationService = reservationService;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.amenityRepository = amenityRepository;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("userValues", userRepository.findAll(Sort.by("id"))
+        model.addAttribute("userValues", userService.findAll()
                 .stream()
-                .collect(CustomCollectors.toSortedMap(User::getId, User::getFullName)));
+                .collect(CustomCollectors.toSortedMap(User::username, User::fullName)));
         model.addAttribute("amenitiesValues", amenityRepository.findAll(Sort.by("id"))
                 .stream()
                 .collect(CustomCollectors.toSortedMap(Amenity::getId, Amenity::getName)));
