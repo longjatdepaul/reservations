@@ -2,25 +2,62 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layout}">
     <head>
+        <meta charset="UTF-8"/>
         <title>[[#{address.add.headline}]]</title>
+
+        <link th:rel="stylesheet" th:href="@{/assets/select2-develop/dist/css/select2.css}"/>
+        <link th:rel="stylesheet" th:href="@{/assets/select2-bootstrap4-theme-master/dist/select2-bootstrap4.css}"/>
+        <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
     </head>
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">[[#{address.add.headline}]]</h1>
-                <div>
+                <div style="width: 100%">
                     <a th:href="@{/addresses}" class="btn btn-secondary">[[#{address.add.back}]]</a>
                 </div>
             </div>
             <div th:replace="~{fragments/forms::globalErrors('address')}" />
             <form th:action="${requestUri}" method="post">
-                <div th:replace="~{fragments/forms::inputRow(object='address', field='name')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='address', field='street')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='address', field='city')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='address', field='state', type='radio')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='address', field='zip')}" />
-                <input type="submit" th:value="#{address.add.headline}" class="btn btn-primary mt-4" />
+                <div class="form-group">
+                    <div th:replace="~{fragments/forms::inputRow(object='address', field='name')}" />
+                    <div th:replace="~{fragments/forms::inputRow(object='address', field='street')}" />
+                    <div th:replace="~{fragments/forms::inputRow(object='address', field='city')}" />
+                    <div class="row mb-3">
+                        <label for="state" class="col-md-2 col-form-label"><span>State</span></label>
+                        <div class="col-md-10">
+                            <select id="state" class="form-control select2-single" th:field="*{address.state}">
+                                <option value="">Search state</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div th:replace="~{fragments/forms::inputRow(object='address', field='zip')}" />
+                    <input type="hidden" id="stateEndpoint" th:value="${stateEndpoint}"/>
+                    <input type="submit" th:value="#{address.add.headline}" class="btn btn-primary mt-4" />
+                </div>
             </form>
         </div>
+
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/assets/select2-develop/dist/js/select2.full.js}"></script>
+
+        <script>
+            $("#state").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: $("#stateEndpoint").val(),
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+        </script>
     </body>
 </html>

@@ -37,9 +37,8 @@ public class Amenity {
     @Column(nullable = false, unique = true, length = 256)
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "address_id", nullable = false)
-    private Address address;
+    @Column(nullable = false)
+    private Long address;
 
     @Column(length = 256)
     private String location;

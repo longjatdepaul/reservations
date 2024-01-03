@@ -1,7 +1,8 @@
 package edu.depaul.reservations.controller;
 
+import edu.depaul.reservations.api.addresses.model.Address;
 import edu.depaul.reservations.model.*;
-import edu.depaul.reservations.repos.AddressRepository;
+import edu.depaul.reservations.api.addresses.repos.AddressRepository;
 import edu.depaul.reservations.service.AmenityService;
 import edu.depaul.reservations.util.CustomCollectors;
 import edu.depaul.reservations.util.WebUtils;

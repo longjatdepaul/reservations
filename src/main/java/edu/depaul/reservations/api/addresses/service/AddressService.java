@@ -1,8 +1,8 @@
-package edu.depaul.reservations.service;
+package edu.depaul.reservations.api.addresses.service;
 
-import edu.depaul.reservations.model.Address;
+import edu.depaul.reservations.api.addresses.model.Address;
 import edu.depaul.reservations.model.Amenity;
-import edu.depaul.reservations.repos.AddressRepository;
+import edu.depaul.reservations.api.addresses.repos.AddressRepository;
 import edu.depaul.reservations.repos.AmenityRepository;
 import edu.depaul.reservations.exception.NotFoundException;
 import edu.depaul.reservations.util.WebUtils;

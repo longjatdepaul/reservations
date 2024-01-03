@@ -1,7 +1,7 @@
 package edu.depaul.reservations;
 
 import edu.depaul.reservations.model.*;
-import edu.depaul.reservations.repos.AddressRepository;
+import edu.depaul.reservations.api.addresses.repos.AddressRepository;
 import edu.depaul.reservations.repos.AmenityRepository;
 import edu.depaul.reservations.repos.CapacityRepository;
 import edu.depaul.reservations.repos.ReservationRepository;

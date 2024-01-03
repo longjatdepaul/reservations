@@ -1,7 +1,7 @@
-package edu.depaul.reservations.rest;
+package edu.depaul.reservations.api.addresses.rest;
 
-import edu.depaul.reservations.model.Address;
-import edu.depaul.reservations.service.AddressService;
+import edu.depaul.reservations.api.addresses.model.Address;
+import edu.depaul.reservations.api.addresses.service.AddressService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -32,9 +32,19 @@ public class AddressResource {
         return ResponseEntity.ok(addressService.get(id));
     }
 
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> getExists(
+            @RequestParam(name = "name", required = false) final String name
+    ) {
+        if (name != null && addressService.nameExists(name)) {
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
+    }
+
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createUser(@RequestBody @Valid final Address address) {
+    public ResponseEntity<Long> createAddress(@RequestBody @Valid final Address address) {
         final Long createdId = addressService.create(address);
         return new ResponseEntity<>(createdId, HttpStatus.CREATED);
     }

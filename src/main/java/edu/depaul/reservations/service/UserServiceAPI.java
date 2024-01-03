@@ -92,11 +92,11 @@ public class UserServiceAPI {
     public Boolean usernameExists(final String username) {
         Map<String, String> map = new HashMap<>();
         map.put("username", username);
-        return restTemplate.getForObject(
+        return Boolean.TRUE.equals(restTemplate.getForObject(
                 userEndpoint + "/exists?username={username}",
                 Boolean.class,
                 map
-        );
+        ));
     }
 
 //    public String getReferencedWarning(final Long id) {

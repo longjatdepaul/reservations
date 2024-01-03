@@ -1,6 +1,6 @@
-package edu.depaul.reservations.repos;
+package edu.depaul.reservations.api.addresses.repos;
 
-import edu.depaul.reservations.model.Address;
+import edu.depaul.reservations.api.addresses.model.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

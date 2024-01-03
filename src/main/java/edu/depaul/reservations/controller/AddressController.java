@@ -1,10 +1,12 @@
 package edu.depaul.reservations.controller;
 
 import edu.depaul.reservations.model.Address;
-import edu.depaul.reservations.model.StateType;
-import edu.depaul.reservations.service.AddressService;
+import edu.depaul.reservations.model.UserType;
+import edu.depaul.reservations.service.AddressServiceAPI;
 import edu.depaul.reservations.util.WebUtils;
 import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,15 +18,18 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/addresses")
 public class AddressController {
 
-    private final AddressService addressService;
+    private final String stateEndpoint;
+    private final AddressServiceAPI addressService;
 
-    public AddressController(final AddressService addressService) {
+    public AddressController(final @Value("${service.endpoint.states}") String stateEndpoint,
+                             final AddressServiceAPI addressService) {
+        this.stateEndpoint = stateEndpoint;
         this.addressService = addressService;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("stateValues", StateType.values());
+        model.addAttribute("stateEndpoint", stateEndpoint);
     }
 
     @GetMapping
@@ -41,7 +46,7 @@ public class AddressController {
     @PostMapping("/add")
     public String add(@ModelAttribute("address") @Valid final Address address,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (!bindingResult.hasFieldErrors("name") && addressService.nameExists(address.getName())) {
+        if (!bindingResult.hasFieldErrors("name") && addressService.nameExists(address.name())) {
             bindingResult.rejectValue("name", "Exists.address.name");
         }
         if (bindingResult.hasErrors()) {
@@ -64,8 +69,8 @@ public class AddressController {
             final RedirectAttributes redirectAttributes) {
         final Address currentAddress = addressService.get(id);
         if (!bindingResult.hasFieldErrors("name") &&
-                !address.getName().equalsIgnoreCase(currentAddress.getName()) &&
-                addressService.nameExists(address.getName())) {
+                !address.name().equalsIgnoreCase(currentAddress.name()) &&
+                addressService.nameExists(address.name())) {
             bindingResult.rejectValue("name", "Exists.address.name");
         }
         if (bindingResult.hasErrors()) {
@@ -79,13 +84,13 @@ public class AddressController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable(name = "id") final Long id,
             final RedirectAttributes redirectAttributes) {
-        final String referencedWarning = addressService.getReferencedWarning(id);
-        if (referencedWarning != null) {
-            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, referencedWarning);
-        } else {
+//        final String referencedWarning = addressService.getReferencedWarning(id);
+//        if (referencedWarning != null) {
+//            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, referencedWarning);
+//        } else {
             addressService.delete(id);
             redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("address.delete.success"));
-        }
+//        }
         return "redirect:/addresses";
     }
 
