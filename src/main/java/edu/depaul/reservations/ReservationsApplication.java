@@ -47,7 +47,7 @@ public class ReservationsApplication {
             User user = new User(
                     "Jonathan Lee Long",
                     "jleelong",
-                    UserType.ADMINISTRATOR,
+                    "ADMIN",
                     bCryptPasswordEncoder().encode("sEcReT")
             );
             String username = userService.create(user);

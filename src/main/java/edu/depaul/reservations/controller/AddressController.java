@@ -1,7 +1,6 @@
 package edu.depaul.reservations.controller;
 
 import edu.depaul.reservations.model.Address;
-import edu.depaul.reservations.model.UserType;
 import edu.depaul.reservations.service.AddressServiceAPI;
 import edu.depaul.reservations.util.WebUtils;
 import javax.validation.Valid;

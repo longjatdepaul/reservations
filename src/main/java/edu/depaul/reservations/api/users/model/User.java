@@ -1,6 +1,5 @@
 package edu.depaul.reservations.api.users.model;
 
-import edu.depaul.reservations.model.UserType;
 import lombok.*;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.annotation.CreatedDate;

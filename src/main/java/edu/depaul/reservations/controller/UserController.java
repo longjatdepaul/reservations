@@ -1,9 +1,9 @@
 package edu.depaul.reservations.controller;
 
-import edu.depaul.reservations.model.UserType;
 import edu.depaul.reservations.model.User;
 import edu.depaul.reservations.service.UserServiceAPI;
 import edu.depaul.reservations.util.WebUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,18 +18,21 @@ import javax.validation.Valid;
 @RequestMapping("/users")
 public class UserController {
 
+    private final String userTypeEndpoint;
     private final UserServiceAPI userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserController(final UserServiceAPI userService,
+    public UserController(final @Value("${service.endpoint.usertypes}") String userTypeEndpoint,
+                          final UserServiceAPI userService,
                           final BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userTypeEndpoint = userTypeEndpoint;
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("typeValues", UserType.values());
+        model.addAttribute("userTypeEndpoint", userTypeEndpoint);
     }
 
     @GetMapping

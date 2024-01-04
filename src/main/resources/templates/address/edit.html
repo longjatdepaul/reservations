@@ -28,7 +28,9 @@
                         <label for="state" class="col-md-2 col-form-label"><span>State</span></label>
                         <div class="col-md-10">
                             <select id="state" class="form-control select2-single" th:field="*{address.state}">
-                                <option th:value="${address.state}"><span th:text="${address.state}" th:if="${address.state != null}"></span></option>
+                                <option th:value="${address.state}">
+                                    <span th:text="${address.state}" th:if="${address.state != null}"></span>
+                                </option>
                             </select>
                         </div>
                     </div>

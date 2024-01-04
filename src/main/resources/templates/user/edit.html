@@ -2,24 +2,63 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layout}">
     <head>
+        <meta charset="UTF-8"/>
         <title>[[#{user.edit.headline}]]</title>
+
+        <link th:rel="stylesheet" th:href="@{/assets/select2-develop/dist/css/select2.css}"/>
+        <link th:rel="stylesheet" th:href="@{/assets/select2-bootstrap4-theme-master/dist/select2-bootstrap4.css}"/>
+        <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
     </head>
     <body>
         <div layout:fragment="content">
             <div class="d-flex flex-wrap mb-4">
                 <h1 class="flex-grow-1">[[#{user.edit.headline}]]</h1>
-                <div>
+                <div style="width: 100%">
                     <a th:href="@{/users}" class="btn btn-secondary">[[#{user.edit.back}]]</a>
                 </div>
             </div>
             <div th:replace="~{fragments/forms::globalErrors('user')}" />
             <form th:action="${requestUri}" method="post">
-                <div th:replace="~{fragments/forms::inputRow(object='user', field='fullName')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='user', field='username')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='user', field='type', type='radio')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='user', field='passwordHash')}" />
-                <input type="submit" th:value="#{user.edit.headline}" class="btn btn-primary mt-4" />
+                <div class="form-group">
+                    <div th:replace="~{fragments/forms::inputRow(object='user', field='fullName')}" />
+                    <div th:replace="~{fragments/forms::inputRow(object='user', field='username')}" />
+                    <div class="row mb-3">
+                        <label for="type" class="col-md-2 col-form-label"><span>Type</span></label>
+                        <div class="col-md-10">
+                            <select id="type" class="form-control select2-single" th:field="*{user.type}">
+                                <option th:value="${user.type}">
+                                    <span th:text="${user.type}" th:if="${user.type != null}"></span>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div th:replace="~{fragments/forms::inputRow(object='user', field='passwordHash')}" />
+                    <input type="hidden" id="userTypeEndpoint" th:value="${userTypeEndpoint}"/>
+                    <input type="submit" th:value="#{user.edit.headline}" class="btn btn-primary mt-4" />
+                </div>
             </form>
         </div>
+
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/assets/select2-develop/dist/js/select2.full.js}"></script>
+
+        <script>
+            $("#type").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: $("#userTypeEndpoint").val(),
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+        </script>
     </body>
 </html>

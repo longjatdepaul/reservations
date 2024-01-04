@@ -6,6 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public record User(
         String fullName,
         String username,
-        UserType type,
+        String type,
         String passwordHash
 ) { }
