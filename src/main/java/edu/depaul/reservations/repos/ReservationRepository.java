@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    Reservation findFirstByUser(User user);
+    Reservation findFirstByUserId(Long userId);
 
     Reservation findFirstByAmenities(Amenity amenity);
 

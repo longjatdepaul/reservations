@@ -17,7 +17,9 @@
                 <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
+                            <th scope="col">[[#{user.id.label}]]</th>
                             <th scope="col">[[#{user.fullName.label}]]</th>
+                            <th scope="col">[[#{user.address.label}]]</th>
                             <th scope="col">[[#{user.username.label}]]</th>
                             <th scope="col">[[#{user.type.label}]]</th>
                             <th scope="col">[[#{user.passwordHash.label}]]</th>
@@ -26,7 +28,9 @@
                     </thead>
                     <tbody>
                         <tr th:each="user : ${users}">
+                            <td>[[${user.id}]]</td>
                             <td>[[${user.fullName}]]</td>
+                            <td>[[${user.addressId}]]</td>
                             <td>[[${user.username}]]</td>
                             <td>[[${user.type}]]</td>
                             <td>[[${user.passwordHash}]]</td>

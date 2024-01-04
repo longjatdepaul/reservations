@@ -40,7 +40,7 @@ public class ReservationController {
     public void prepareContext(final Model model) {
         model.addAttribute("userValues", userService.findAll()
                 .stream()
-                .collect(CustomCollectors.toSortedMap(User::username, User::fullName)));
+                .collect(CustomCollectors.toSortedMap(User::id, User::fullName)));
         model.addAttribute("amenitiesValues", amenityRepository.findAll(Sort.by("id"))
                 .stream()
                 .collect(CustomCollectors.toSortedMap(Amenity::getId, Amenity::getName)));

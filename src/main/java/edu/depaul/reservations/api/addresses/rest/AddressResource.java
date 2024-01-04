@@ -1,15 +1,21 @@
 package edu.depaul.reservations.api.addresses.rest;
 
 import edu.depaul.reservations.api.addresses.model.Address;
+import edu.depaul.reservations.api.addresses.model.AddressItem;
+import edu.depaul.reservations.api.addresses.model.State;
+import edu.depaul.reservations.api.addresses.model.StateItem;
 import edu.depaul.reservations.api.addresses.service.AddressService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -25,6 +31,33 @@ public class AddressResource {
     @GetMapping
     public ResponseEntity<List<Address>> getAllAddresses() {
         return ResponseEntity.ok(addressService.findAll());
+    }
+
+    @GetMapping("/search")
+    public List<AddressItem> addressItems(@RequestParam(value = "q", required = false) String query) {
+        if (!StringUtils.hasLength(query)) {
+            return addressService.findAll().stream()
+                    .map(this::mapToAddressItem)
+                    .collect(Collectors.toList());
+        }
+
+        return addressService.search(query.toLowerCase()).stream()
+                .limit(15)
+                .map(this::mapToAddressItem)
+                .collect(Collectors.toList());
+    }
+
+    private AddressItem mapToAddressItem(Address address) {
+        return AddressItem.builder()
+                .id(address.getId())
+                .text(String.format("%s, %s, %s, %s %s",
+                        address.getName(),
+                        address.getStreet(),
+                        address.getCity(),
+                        address.getState(),
+                        address.getZip()))
+                .slug(address.getId().toString())
+                .build();
     }
 
     @GetMapping("/{id}")

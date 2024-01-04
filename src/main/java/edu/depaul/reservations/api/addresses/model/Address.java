@@ -36,6 +36,10 @@ public class Address {
     @Column(nullable = false, unique = true, length = 256)
     private String name;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AddressType type;
+
     @Column(nullable = false, length = 256)
     private String street;
 
@@ -44,7 +48,7 @@ public class Address {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private StateType state;
+    private State state;
 
     @Column(nullable = false, length = 16)
     private String zip;

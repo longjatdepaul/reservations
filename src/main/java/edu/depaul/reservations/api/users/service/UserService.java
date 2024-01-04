@@ -32,8 +32,8 @@ public class UserService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public String create(final User user) {
-        return userRepository.save(user).getUsername();
+    public Long create(final User user) {
+        return userRepository.save(user).getId();
     }
 
     public void update(final Long id, final User user) {

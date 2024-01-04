@@ -38,6 +38,9 @@ public class User {
     @Column(nullable = false, unique = true, length = 256)
     private String fullName;
 
+    @Column
+    private Long addressId;
+
     @Column(nullable = false, unique = true, length = 16)
     private String username;
 

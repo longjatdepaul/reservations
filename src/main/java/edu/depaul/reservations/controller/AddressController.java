@@ -18,17 +18,21 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AddressController {
 
     private final String stateEndpoint;
+    private final String addressTypeEndpoint;
     private final AddressServiceAPI addressService;
 
     public AddressController(final @Value("${service.endpoint.states}") String stateEndpoint,
+                             final @Value("${service.endpoint.addresstypes}") String addressTypeEndpoint,
                              final AddressServiceAPI addressService) {
         this.stateEndpoint = stateEndpoint;
+        this.addressTypeEndpoint = addressTypeEndpoint;
         this.addressService = addressService;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
         model.addAttribute("stateEndpoint", stateEndpoint);
+        model.addAttribute("addressTypeEndpoint", addressTypeEndpoint);
     }
 
     @GetMapping

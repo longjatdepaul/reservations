@@ -34,6 +34,7 @@ springdoc:
 service:
   endpoint:
     addresses: http://192.168.86.90:8080/api/addresses
+    addresstypes: http://192.168.86.90:8080/api/addresstypes
     states: http://192.168.86.90:8080/api/states
     users: http://192.168.86.90:8080/api/users
     usertypes: http://192.168.86.90:8080/api/usertypes

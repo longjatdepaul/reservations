@@ -51,7 +51,7 @@ public class Reservation {
     private LocalTime endTime;
 
     @Column(nullable = false)
-    private String user;
+    private Long userId;
 
     @ManyToMany
     @JoinTable(
@@ -85,11 +85,11 @@ public class Reservation {
     }
 
     public Reservation(LocalDate reservationDate, LocalTime startTime,
-                       LocalTime endTime, String user, AmenityType amenityType) {
+                       LocalTime endTime, Long userId, AmenityType amenityType) {
         this.reservationDate = reservationDate;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.user = user;
+        this.userId = userId;
         this.amenityType = amenityType;
     }
 

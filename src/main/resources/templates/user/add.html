@@ -21,6 +21,14 @@
             <form th:action="${requestUri}" method="post">
                 <div class="form-group">
                     <div th:replace="~{fragments/forms::inputRow(object='user', field='fullName')}" />
+                    <div class="row mb-3">
+                        <label for="address" class="col-md-2 col-form-label"><span>Address</span></label>
+                        <div class="col-md-10">
+                            <select id="address" class="form-control select2-single" th:field="*{user.addressId}">
+                                <option value="">Search address</option>
+                            </select>
+                        </div>
+                    </div>
                     <div th:replace="~{fragments/forms::inputRow(object='user', field='username')}" />
                     <div class="row mb-3">
                         <label for="type" class="col-md-2 col-form-label"><span>Type</span></label>
@@ -31,6 +39,7 @@
                         </div>
                     </div>
                     <div th:replace="~{fragments/forms::inputRow(object='user', field='passwordHash')}" />
+                    <input type="hidden" id="addressEndpoint" th:value="${addressEndpoint}"/>
                     <input type="hidden" id="userTypeEndpoint" th:value="${userTypeEndpoint}"/>
                     <input type="submit" th:value="#{user.add.headline}" class="btn btn-primary mt-4" />
                 </div>
@@ -43,6 +52,21 @@
         <script th:src="@{/assets/select2-develop/dist/js/select2.full.js}"></script>
 
         <script>
+            $("#address").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: $("#addressEndpoint").val() + "/search",
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+
             $("#type").select2({
                 theme: "bootstrap4",
                 ajax: {

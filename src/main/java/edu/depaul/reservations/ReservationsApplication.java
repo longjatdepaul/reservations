@@ -1,10 +1,10 @@
 package edu.depaul.reservations;
 
 import edu.depaul.reservations.model.*;
-import edu.depaul.reservations.api.addresses.repos.AddressRepository;
 import edu.depaul.reservations.repos.AmenityRepository;
 import edu.depaul.reservations.repos.CapacityRepository;
 import edu.depaul.reservations.repos.ReservationRepository;
+import edu.depaul.reservations.service.AddressServiceAPI;
 import edu.depaul.reservations.service.UserServiceAPI;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -40,30 +40,45 @@ public class ReservationsApplication {
     @Bean
     public CommandLineRunner loadData(UserServiceAPI userService,
                                       CapacityRepository capacityRepository,
-                                      AddressRepository addressRepository,
+                                      AddressServiceAPI addressService,
                                       AmenityRepository amenityRepository,
                                       ReservationRepository reservationRepository) {
         return (args) -> {
+            Address address = new Address(
+                    10000L,
+                    "Long Jersey Shore Residence",
+                    "RESIDENTIAL",
+                    "15 Sailors Way",
+                    "Middletown",
+                    "NJ",
+                    "07748"
+            );
+            Long addressId = addressService.create(address);
+
             User user = new User(
+                    10001L,
                     "Jonathan Lee Long",
+                    addressId,
                     "jleelong",
                     "ADMIN",
                     bCryptPasswordEncoder().encode("sEcReT")
             );
-            String username = userService.create(user);
+            Long userId = userService.create(user);
+
+            address = new Address(
+                    10002L,
+                    "Depaul Catholic High School",
+                    "BUSINESS",
+                    "1512 Alps Rd",
+                    "Wayne",
+                    "NJ",
+                    "07470"
+            );
+            addressId = addressService.create(address);
 
 //            for (AmenityType amenityType : initialCapacities.keySet()) {
 //                capacityRepository.save(new Capacity(amenityType, initialCapacities.get(amenityType)));
 //            }
-//
-//            Address address = Address.builder()
-//                    .name("Depaul Catholic High School")
-//                    .street("1512 Alps Rd")
-//                    .city("Wayne")
-//                    .state(StateType.NEW_JERSEY)
-//                    .zip("07470")
-//                    .build();
-//            address = addressRepository.save(address);
 //
 //            DayOfWeekType[] availability = new DayOfWeekType[] {
 //                    DayOfWeekType.SATURDAY,

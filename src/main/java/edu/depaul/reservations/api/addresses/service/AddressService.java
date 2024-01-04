@@ -6,6 +6,8 @@ import edu.depaul.reservations.api.addresses.repos.AddressRepository;
 import edu.depaul.reservations.repos.AmenityRepository;
 import edu.depaul.reservations.exception.NotFoundException;
 import edu.depaul.reservations.util.WebUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +27,12 @@ public class AddressService {
     }
 
     public List<Address> findAll() {
-        return addressRepository.findAll(Sort.by("id"));
+        Pageable limit = PageRequest.of(0,15, Sort.by("id"));
+        return addressRepository.findAll(limit).toList();
+    }
+
+    public List<Address> search(String query) {
+        return addressRepository.findByNameContainingIgnoreCaseOrStreetContainingIgnoreCase(query, query);
     }
 
     public Address get(final Long id) {

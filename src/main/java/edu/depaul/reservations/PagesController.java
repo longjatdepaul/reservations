@@ -59,7 +59,7 @@ public class PagesController {
                                      Model model, @SessionAttribute("user") User user) {
         // Save to DB after updating
         assert user != null;
-        reservation.setUser(user.username());
+        reservation.setUserId(user.id());
         reservationService.create(reservation);
         //Set<Reservation> userReservations = user.getReservations();
         //userReservations.add(reservation);

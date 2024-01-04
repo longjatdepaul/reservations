@@ -1,6 +1,8 @@
 package edu.depaul.reservations.controller;
 
+import edu.depaul.reservations.model.Address;
 import edu.depaul.reservations.model.User;
+import edu.depaul.reservations.service.AddressServiceAPI;
 import edu.depaul.reservations.service.UserServiceAPI;
 import edu.depaul.reservations.util.WebUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,20 +20,27 @@ import javax.validation.Valid;
 @RequestMapping("/users")
 public class UserController {
 
+    private final String addressEndpoint;
     private final String userTypeEndpoint;
     private final UserServiceAPI userService;
+    private final AddressServiceAPI addressService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserController(final @Value("${service.endpoint.usertypes}") String userTypeEndpoint,
+    public UserController(final @Value("${service.endpoint.addresses}") String addressEndpoint,
+                          final @Value("${service.endpoint.usertypes}") String userTypeEndpoint,
                           final UserServiceAPI userService,
+                          final AddressServiceAPI addressService,
                           final BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.addressEndpoint = addressEndpoint;
         this.userTypeEndpoint = userTypeEndpoint;
         this.userService = userService;
+        this.addressService = addressService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
+        model.addAttribute("addressEndpoint", addressEndpoint);
         model.addAttribute("userTypeEndpoint", userTypeEndpoint);
     }
 
@@ -59,7 +68,9 @@ public class UserController {
             return "user/add";
         }
         User encoded = new User(
+                user.id(),
                 user.fullName(),
+                user.addressId(),
                 user.username(),
                 user.type(),
                 bCryptPasswordEncoder.encode(user.passwordHash())
@@ -73,12 +84,24 @@ public class UserController {
     public String edit(@PathVariable(name = "username") final String username, final Model model) {
         User current = userService.get(username);
         User editing = new User(
+                current.id(),
                 current.fullName(),
+                current.addressId(),
                 current.username(),
                 current.type(),
                 ""
         );
         model.addAttribute("user", editing);
+        if (current.addressId() != null) {
+            Address currentAddress = addressService.get(current.addressId());
+            model.addAttribute("currentAddress", String.format("%s, %s, %s, %s %s",
+                    currentAddress.name(),
+                    currentAddress.street(),
+                    currentAddress.city(),
+                    currentAddress.state(),
+                    currentAddress.zip())
+            );
+        }
         return "user/edit";
     }
 
@@ -101,7 +124,9 @@ public class UserController {
             return "user/edit";
         }
         User encoded = new User(
+                user.id(),
                 user.fullName(),
+                user.addressId(),
                 user.username(),
                 user.type(),
                 bCryptPasswordEncoder.encode(user.passwordHash())

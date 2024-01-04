@@ -3,7 +3,7 @@ package edu.depaul.reservations.api.addresses.model;
 import lombok.Getter;
 
 @Getter
-public enum StateType {
+public enum State {
 
     AL("Alabama"),
     AK("Alaska"),
@@ -59,7 +59,7 @@ public enum StateType {
 
     private final String label;
 
-    StateType(String label) {
+    State(String label) {
         this.label = label;
     }
 }

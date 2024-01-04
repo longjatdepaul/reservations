@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class StateItem {
+public class AddressItem {
 
-    private State id;
+    private Long id;
     private String text;
     private String slug;
 

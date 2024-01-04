@@ -19,6 +19,7 @@
                         <tr>
                             <th scope="col">[[#{address.id.label}]]</th>
                             <th scope="col">[[#{address.name.label}]]</th>
+                            <th scope="col">[[#{address.type.label}]]</th>
                             <th scope="col">[[#{address.street.label}]]</th>
                             <th scope="col">[[#{address.city.label}]]</th>
                             <th scope="col">[[#{address.state.label}]]</th>
@@ -30,6 +31,7 @@
                         <tr th:each="address : ${addresses}">
                             <td>[[${address.id}]]</td>
                             <td>[[${address.name}]]</td>
+                            <td>[[${address.type}]]</td>
                             <td>[[${address.street}]]</td>
                             <td>[[${address.city}]]</td>
                             <td>[[${address.state}]]</td>

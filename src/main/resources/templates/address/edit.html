@@ -22,6 +22,16 @@
                 <div class="form-group">
                     <div th:replace="~{fragments/forms::inputRow(object='address', field='id', disabled=true, type='number')}" />
                     <div th:replace="~{fragments/forms::inputRow(object='address', field='name')}" />
+                    <div class="row mb-3">
+                        <label for="type" class="col-md-2 col-form-label"><span>Type</span></label>
+                        <div class="col-md-10">
+                            <select id="type" class="form-control select2-single" th:field="*{address.type}">
+                                <option th:value="${address.type}">
+                                    <span th:text="${address.type}" th:if="${address.type != null}"></span>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
                     <div th:replace="~{fragments/forms::inputRow(object='address', field='street')}" />
                     <div th:replace="~{fragments/forms::inputRow(object='address', field='city')}" />
                     <div class="row mb-3">
@@ -35,6 +45,7 @@
                         </div>
                     </div>
                     <div th:replace="~{fragments/forms::inputRow(object='address', field='zip')}" />
+                    <input type="hidden" id="addressTypeEndpoint" th:value="${addressTypeEndpoint}"/>
                     <input type="hidden" id="stateEndpoint" th:value="${stateEndpoint}"/>
                     <input type="submit" th:value="#{address.edit.headline}" class="btn btn-primary mt-4" />
                 </div>
@@ -47,6 +58,21 @@
         <script th:src="@{/assets/select2-develop/dist/js/select2.full.js}"></script>
 
         <script>
+            $("#type").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: $("#addressTypeEndpoint").val(),
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+
             $("#state").select2({
                 theme: "bootstrap4",
                 ajax: {

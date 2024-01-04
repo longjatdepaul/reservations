@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public record Address(
         Long id,
         String name,
+        String type,
         String street,
         String city,
         String state,

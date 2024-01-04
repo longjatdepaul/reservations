@@ -48,9 +48,9 @@ public class UserResource {
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<String> createUser(@RequestBody @Valid final User user) {
-        final String username = userService.create(user);
-        return new ResponseEntity<>(username, HttpStatus.CREATED);
+    public ResponseEntity<Long> createUser(@RequestBody @Valid final User user) {
+        final Long userId = userService.create(user);
+        return new ResponseEntity<>(userId, HttpStatus.CREATED);
     }
 
     @PutMapping("/{username}")
@@ -61,6 +61,7 @@ public class UserResource {
             User reference = new User(
                     current.getId(),
                     user.getFullName(),
+                    user.getAddressId(),
                     user.getUsername(),
                     user.getType(),
                     user.getPasswordHash(),
