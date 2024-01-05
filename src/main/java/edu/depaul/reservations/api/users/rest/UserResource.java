@@ -61,10 +61,12 @@ public class UserResource {
             User reference = new User(
                     current.getId(),
                     user.getFullName(),
-                    user.getAddressId(),
                     user.getUsername(),
                     user.getType(),
                     user.getPasswordHash(),
+                    user.getEmail(),
+                    user.getMobile(),
+                    user.getAddressId(),
                     current.getDateCreated(),
                     current.getLastUpdated()
             );

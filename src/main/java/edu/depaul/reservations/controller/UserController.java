@@ -2,8 +2,10 @@ package edu.depaul.reservations.controller;
 
 import edu.depaul.reservations.model.Address;
 import edu.depaul.reservations.model.User;
+import edu.depaul.reservations.model.UserType;
 import edu.depaul.reservations.service.AddressServiceAPI;
 import edu.depaul.reservations.service.UserServiceAPI;
+import edu.depaul.reservations.service.UserTypeServiceAPI;
 import edu.depaul.reservations.util.WebUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,17 +25,20 @@ public class UserController {
     private final String addressEndpoint;
     private final String userTypeEndpoint;
     private final UserServiceAPI userService;
+    private final UserTypeServiceAPI userTypeService;
     private final AddressServiceAPI addressService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserController(final @Value("${service.endpoint.addresses}") String addressEndpoint,
-                          final @Value("${service.endpoint.usertypes}") String userTypeEndpoint,
+                          final @Value("${service.endpoint.userTypes}") String userTypeEndpoint,
                           final UserServiceAPI userService,
+                          final UserTypeServiceAPI userTypeService,
                           final AddressServiceAPI addressService,
                           final BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.addressEndpoint = addressEndpoint;
         this.userTypeEndpoint = userTypeEndpoint;
         this.userService = userService;
+        this.userTypeService = userTypeService;
         this.addressService = addressService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
@@ -67,13 +72,17 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "user/add";
         }
+        UserType userType = userTypeService.get(user.typeId());
         User encoded = new User(
                 user.id(),
                 user.fullName(),
-                user.addressId(),
                 user.username(),
-                user.type(),
-                bCryptPasswordEncoder.encode(user.passwordHash())
+                userType,
+                bCryptPasswordEncoder.encode(user.passwordHash()),
+                user.email(),
+                user.mobile(),
+                user.addressId(),
+                user.typeId()
         );
         userService.create(encoded);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user.create.success"));
@@ -86,10 +95,13 @@ public class UserController {
         User editing = new User(
                 current.id(),
                 current.fullName(),
-                current.addressId(),
                 current.username(),
                 current.type(),
-                ""
+                "",
+                current.email(),
+                current.mobile(),
+                current.addressId(),
+                current.typeId()
         );
         model.addAttribute("user", editing);
         if (current.addressId() != null) {
@@ -123,13 +135,17 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             return "user/edit";
         }
+        UserType userType = userTypeService.get(user.typeId());
         User encoded = new User(
                 user.id(),
                 user.fullName(),
-                user.addressId(),
                 user.username(),
-                user.type(),
-                bCryptPasswordEncoder.encode(user.passwordHash())
+                userType,
+                bCryptPasswordEncoder.encode(user.passwordHash()),
+                user.email(),
+                user.mobile(),
+                user.addressId(),
+                user.typeId()
         );
         userService.update(username, encoded);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user.update.success"));

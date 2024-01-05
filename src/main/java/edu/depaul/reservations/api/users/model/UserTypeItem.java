@@ -7,8 +7,7 @@ import lombok.Getter;
 @Builder
 public class UserTypeItem {
 
-    private UserType id;
+    private Long id;
     private String text;
-    private String slug;
 
 }

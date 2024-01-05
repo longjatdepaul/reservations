@@ -19,10 +19,11 @@
                         <tr>
                             <th scope="col">[[#{user.id.label}]]</th>
                             <th scope="col">[[#{user.fullName.label}]]</th>
-                            <th scope="col">[[#{user.address.label}]]</th>
                             <th scope="col">[[#{user.username.label}]]</th>
                             <th scope="col">[[#{user.type.label}]]</th>
-                            <th scope="col">[[#{user.passwordHash.label}]]</th>
+                            <th scope="col">[[#{user.email.label}]]</th>
+                            <th scope="col">[[#{user.mobile.label}]]</th>
+                            <th scope="col">[[#{user.address.label}]]</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
@@ -30,10 +31,11 @@
                         <tr th:each="user : ${users}">
                             <td>[[${user.id}]]</td>
                             <td>[[${user.fullName}]]</td>
-                            <td>[[${user.addressId}]]</td>
                             <td>[[${user.username}]]</td>
-                            <td>[[${user.type}]]</td>
-                            <td>[[${user.passwordHash}]]</td>
+                            <td>[[${user.type.name}]]</td>
+                            <td>[[${user.email}]]</td>
+                            <td>[[${user.mobile}]]</td>
+                            <td>[[${user.addressId}]]</td>
                             <td>
                                 <div class="float-end text-nowrap">
                                     <a th:href="@{/users/edit/{username}(username=${user.username})}" class="btn btn-sm btn-secondary">[[#{user.list.edit}]]</a>

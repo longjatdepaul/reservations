@@ -38,18 +38,24 @@ public class User {
     @Column(nullable = false, unique = true, length = 256)
     private String fullName;
 
-    @Column
-    private Long addressId;
-
     @Column(nullable = false, unique = true, length = 16)
     private String username;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "type_id", nullable = false)
     private UserType type;
 
     @Column(length = 256)
     private String passwordHash;
+
+    @Column(nullable = false, unique = true, length = 256)
+    private String email;
+
+    @Column(nullable = false, unique = true, length = 32)
+    private String mobile;
+
+    @Column
+    private Long addressId;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -73,11 +79,4 @@ public class User {
     public String toString() {
         return fullName;
     }
-
-    public User(String fullName, String username, String passwordHash) {
-        this.fullName = fullName;
-        this.username = username;
-        this.passwordHash = passwordHash;
-    }
-
 }

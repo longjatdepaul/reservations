@@ -22,6 +22,20 @@
                 <div class="form-group">
                     <div th:replace="~{fragments/forms::inputRow(object='user', field='id', disabled=true, type='number')}" />
                     <div th:replace="~{fragments/forms::inputRow(object='user', field='fullName')}" />
+                    <div th:replace="~{fragments/forms::inputRow(object='user', field='username')}" />
+                    <div class="row mb-3">
+                        <label for="type" class="col-md-2 col-form-label"><span>Type</span></label>
+                        <div class="col-md-10">
+                            <select id="type" class="form-control select2-single" th:field="*{user.typeId}">
+                                <option th:value="${user.type.id}">
+                                    <span th:text="${user.type.name}" th:if="${user.type != null}"></span>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div th:type="password" th:replace="~{fragments/forms::inputRow(object='user', field='passwordHash')}" />
+                    <div th:type="email" th:replace="~{fragments/forms::inputRow(object='user', field='email')}" />
+                    <div th:type="tel" th:replace="~{fragments/forms::inputRow(object='user', field='mobile')}" />
                     <div class="row mb-3">
                         <label for="address" class="col-md-2 col-form-label"><span>Address</span></label>
                         <div class="col-md-10">
@@ -32,20 +46,8 @@
                             </select>
                         </div>
                     </div>
-                    <div th:replace="~{fragments/forms::inputRow(object='user', field='username')}" />
-                    <div class="row mb-3">
-                        <label for="type" class="col-md-2 col-form-label"><span>Type</span></label>
-                        <div class="col-md-10">
-                            <select id="type" class="form-control select2-single" th:field="*{user.type}">
-                                <option th:value="${user.type}">
-                                    <span th:text="${user.type}" th:if="${user.type != null}"></span>
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div th:replace="~{fragments/forms::inputRow(object='user', field='passwordHash')}" />
-                    <input type="hidden" id="addressEndpoint" th:value="${addressEndpoint}"/>
                     <input type="hidden" id="userTypeEndpoint" th:value="${userTypeEndpoint}"/>
+                    <input type="hidden" id="addressEndpoint" th:value="${addressEndpoint}"/>
                     <input type="submit" th:value="#{user.edit.headline}" class="btn btn-primary mt-4" />
                 </div>
             </form>
@@ -57,10 +59,10 @@
         <script th:src="@{/assets/select2-develop/dist/js/select2.full.js}"></script>
 
         <script>
-            $("#address").select2({
+            $("#type").select2({
                 theme: "bootstrap4",
                 ajax: {
-                    url: $("#addressEndpoint").val() + "/search",
+                    url: $("#userTypeEndpoint").val() + "/search",
                     dataType: 'json',
                     delay: 250,
                     processResults: function (response) {
@@ -72,10 +74,10 @@
                 }
             });
 
-            $("#type").select2({
+            $("#address").select2({
                 theme: "bootstrap4",
                 ajax: {
-                    url: $("#userTypeEndpoint").val(),
+                    url: $("#addressEndpoint").val() + "/search",
                     dataType: 'json',
                     delay: 250,
                     processResults: function (response) {

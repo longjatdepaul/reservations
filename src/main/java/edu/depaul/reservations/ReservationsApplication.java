@@ -6,6 +6,7 @@ import edu.depaul.reservations.repos.CapacityRepository;
 import edu.depaul.reservations.repos.ReservationRepository;
 import edu.depaul.reservations.service.AddressServiceAPI;
 import edu.depaul.reservations.service.UserServiceAPI;
+import edu.depaul.reservations.service.UserTypeServiceAPI;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -39,13 +40,21 @@ public class ReservationsApplication {
 
     @Bean
     public CommandLineRunner loadData(UserServiceAPI userService,
+                                      UserTypeServiceAPI userTypeService,
                                       CapacityRepository capacityRepository,
                                       AddressServiceAPI addressService,
                                       AmenityRepository amenityRepository,
                                       ReservationRepository reservationRepository) {
         return (args) -> {
+            UserType userType = new UserType(
+                    0L,
+                    "Administrator",
+                    "provides permission to manage user accounts, organizations and roles"
+            );
+            userType = userTypeService.create(userType);
+
             Address address = new Address(
-                    10000L,
+                    0L,
                     "Long Jersey Shore Residence",
                     "RESIDENTIAL",
                     "15 Sailors Way",
@@ -56,17 +65,34 @@ public class ReservationsApplication {
             Long addressId = addressService.create(address);
 
             User user = new User(
-                    10001L,
+                    0L,
                     "Jonathan Lee Long",
-                    addressId,
                     "jleelong",
-                    "ADMIN",
-                    bCryptPasswordEncoder().encode("sEcReT")
+                    userType,
+                    bCryptPasswordEncoder().encode("secret"),
+                    "longj@depaulcatholic.org",
+                    "+1 (973) 694-3702",
+                    addressId,
+                    userType.id()
             );
-            Long userId = userService.create(user);
+            userService.create(user);
+
+            userType = new UserType(
+                    0L,
+                    "Customer",
+                    "provides permission to manage personal addresses and create reservations"
+            );
+            userType = userTypeService.create(userType);
+
+            userType = new UserType(
+                    0L,
+                    "Owner",
+                    "provides permission to create and manage amenities"
+            );
+            userType = userTypeService.create(userType);
 
             address = new Address(
-                    10002L,
+                    0L,
                     "Depaul Catholic High School",
                     "BUSINESS",
                     "1512 Alps Rd",
