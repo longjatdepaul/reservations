@@ -9,6 +9,5 @@ public class StateItem {
 
     private State id;
     private String text;
-    private String slug;
 
 }

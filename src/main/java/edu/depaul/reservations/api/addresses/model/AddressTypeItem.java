@@ -9,6 +9,5 @@ public class AddressTypeItem {
 
     private AddressType id;
     private String text;
-    private String slug;
 
 }

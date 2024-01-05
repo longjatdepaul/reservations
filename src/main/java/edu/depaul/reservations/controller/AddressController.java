@@ -22,7 +22,7 @@ public class AddressController {
     private final AddressServiceAPI addressService;
 
     public AddressController(final @Value("${service.endpoint.states}") String stateEndpoint,
-                             final @Value("${service.endpoint.addresstypes}") String addressTypeEndpoint,
+                             final @Value("${service.endpoint.addressTypes}") String addressTypeEndpoint,
                              final AddressServiceAPI addressService) {
         this.stateEndpoint = stateEndpoint;
         this.addressTypeEndpoint = addressTypeEndpoint;

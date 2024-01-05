@@ -38,7 +38,6 @@ public class AddressTypeResource {
         return AddressTypeItem.builder()
                 .id(type)
                 .text(type.getLabel())
-                .slug(type.name())
                 .build();
     }
 }

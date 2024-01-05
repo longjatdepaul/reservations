@@ -2,8 +2,6 @@ package edu.depaul.reservations.api.addresses.rest;
 
 import edu.depaul.reservations.api.addresses.model.Address;
 import edu.depaul.reservations.api.addresses.model.AddressItem;
-import edu.depaul.reservations.api.addresses.model.State;
-import edu.depaul.reservations.api.addresses.model.StateItem;
 import edu.depaul.reservations.api.addresses.service.AddressService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import javax.validation.Valid;
@@ -13,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,7 +53,6 @@ public class AddressResource {
                         address.getCity(),
                         address.getState(),
                         address.getZip()))
-                .slug(address.getId().toString())
                 .build();
     }
 
@@ -95,5 +91,4 @@ public class AddressResource {
         addressService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
 }

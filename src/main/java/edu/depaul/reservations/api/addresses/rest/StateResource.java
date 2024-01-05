@@ -38,7 +38,6 @@ public class StateResource {
         return StateItem.builder()
                 .id(state)
                 .text(state.getLabel())
-                .slug(state.name())
                 .build();
     }
 }
