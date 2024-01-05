@@ -67,7 +67,7 @@ public class ReservationsApplication {
             User user = new User(
                     0L,
                     "Jonathan Lee Long",
-                    "jleelong",
+                    "longj",
                     userType,
                     bCryptPasswordEncoder().encode("secret"),
                     "longj@depaulcatholic.org",
