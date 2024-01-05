@@ -1,15 +1,20 @@
 package edu.depaul.reservations.api.users.rest;
 
+import edu.depaul.reservations.api.addresses.model.Address;
+import edu.depaul.reservations.api.addresses.model.AddressItem;
 import edu.depaul.reservations.api.users.model.User;
+import edu.depaul.reservations.api.users.model.UserItem;
 import edu.depaul.reservations.api.users.service.UserService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -25,6 +30,27 @@ public class UserResource {
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.findAll());
+    }
+
+    @GetMapping("/search")
+    public List<UserItem> userItems(@RequestParam(value = "q", required = false) String query) {
+        if (!StringUtils.hasLength(query)) {
+            return userService.findAll().stream()
+                    .map(this::mapToUserItem)
+                    .collect(Collectors.toList());
+        }
+
+        return userService.search(query.toLowerCase()).stream()
+                .limit(15)
+                .map(this::mapToUserItem)
+                .collect(Collectors.toList());
+    }
+
+    private UserItem mapToUserItem(User user) {
+        return UserItem.builder()
+                .id(user.getId())
+                .text(user.getFullName())
+                .build();
     }
 
     @GetMapping("/{username}")
