@@ -40,8 +40,8 @@ public class UserService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public Long create(final User user) {
-        return userRepository.save(user).getId();
+    public User create(final User user) {
+        return userRepository.save(user);
     }
 
     public void update(final Long id, final User user) {

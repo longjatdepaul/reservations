@@ -36,9 +36,8 @@ public class Organization {
     @Column(nullable = false, unique = true, length = 256)
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "contact_id", nullable = false)
-    private User contact;
+    @Column(nullable = false)
+    private String contactUser;
 
     @Column(nullable = false)
     private Long addressId;

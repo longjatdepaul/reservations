@@ -5,6 +5,7 @@ import edu.depaul.reservations.repos.AmenityRepository;
 import edu.depaul.reservations.repos.CapacityRepository;
 import edu.depaul.reservations.repos.ReservationRepository;
 import edu.depaul.reservations.service.AddressServiceAPI;
+import edu.depaul.reservations.service.OrganizationServiceAPI;
 import edu.depaul.reservations.service.UserServiceAPI;
 import edu.depaul.reservations.service.UserTypeServiceAPI;
 import org.springframework.boot.CommandLineRunner;
@@ -43,6 +44,7 @@ public class ReservationsApplication {
                                       UserTypeServiceAPI userTypeService,
                                       CapacityRepository capacityRepository,
                                       AddressServiceAPI addressService,
+                                      OrganizationServiceAPI organizationService,
                                       AmenityRepository amenityRepository,
                                       ReservationRepository reservationRepository) {
         return (args) -> {
@@ -73,9 +75,11 @@ public class ReservationsApplication {
                     "longj@depaulcatholic.org",
                     "+1 (973) 694-3702",
                     addressId,
-                    userType.id()
+                    null,
+                    userType.id(),
+                    null
             );
-            userService.create(user);
+            user = userService.create(user);
 
             userType = new UserType(
                     0L,
@@ -93,7 +97,7 @@ public class ReservationsApplication {
 
             address = new Address(
                     0L,
-                    "Depaul Catholic High School",
+                    "DePaul Catholic High School",
                     "BUSINESS",
                     "1512 Alps Rd",
                     "Wayne",
@@ -101,6 +105,29 @@ public class ReservationsApplication {
                     "07470"
             );
             addressId = addressService.create(address);
+
+            Organization organization = new Organization(
+                    0L,
+                    "DePaul Catholic High School",
+                    user.username(),
+                    addressId
+            );
+            organization = organizationService.create(organization);
+
+            user = new User(
+                    user.id(),
+                    user.fullName(),
+                    user.username(),
+                    user.type(),
+                    user.passwordHash(),
+                    user.email(),
+                    user.mobile(),
+                    user.addressId(),
+                    organization,
+                    userType.id(),
+                    organization.id()
+            );
+            userService.update(user.username(), user);
 
 //            for (AmenityType amenityType : initialCapacities.keySet()) {
 //                capacityRepository.save(new Capacity(amenityType, initialCapacities.get(amenityType)));

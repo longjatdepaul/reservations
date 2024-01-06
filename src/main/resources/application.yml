@@ -33,8 +33,9 @@ springdoc:
   pathsToMatch: /api/**
 service:
   endpoint:
-    addresses: http://192.168.86.103:8080/api/addresses
-    addressTypes: http://192.168.86.103:8080/api/addresstypes
-    states: http://192.168.86.103:8080/api/states
-    users: http://192.168.86.103:8080/api/users
-    userTypes: http://192.168.86.103:8080/api/usertypes
+    addresses: http://192.168.86.110:8080/api/addresses
+    addressTypes: http://192.168.86.110:8080/api/addresstypes
+    organizations: http://192.168.86.110:8080/api/organizations
+    states: http://192.168.86.110:8080/api/states
+    users: http://192.168.86.110:8080/api/users
+    userTypes: http://192.168.86.110:8080/api/usertypes

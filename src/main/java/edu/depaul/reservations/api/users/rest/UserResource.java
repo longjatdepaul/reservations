@@ -1,7 +1,5 @@
 package edu.depaul.reservations.api.users.rest;
 
-import edu.depaul.reservations.api.addresses.model.Address;
-import edu.depaul.reservations.api.addresses.model.AddressItem;
 import edu.depaul.reservations.api.users.model.User;
 import edu.depaul.reservations.api.users.model.UserItem;
 import edu.depaul.reservations.api.users.service.UserService;
@@ -48,7 +46,7 @@ public class UserResource {
 
     private UserItem mapToUserItem(User user) {
         return UserItem.builder()
-                .id(user.getId())
+                .id(user.getUsername())
                 .text(user.getFullName())
                 .build();
     }
@@ -74,9 +72,9 @@ public class UserResource {
 
     @PostMapping
     @ApiResponse(responseCode = "201")
-    public ResponseEntity<Long> createUser(@RequestBody @Valid final User user) {
-        final Long userId = userService.create(user);
-        return new ResponseEntity<>(userId, HttpStatus.CREATED);
+    public ResponseEntity<User> createUser(@RequestBody @Valid final User user) {
+        User created = userService.create(user);
+        return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
     @PutMapping("/{username}")
@@ -93,6 +91,7 @@ public class UserResource {
                     user.getEmail(),
                     user.getMobile(),
                     user.getAddressId(),
+                    user.getOrganization(),
                     current.getDateCreated(),
                     current.getLastUpdated()
             );

@@ -1,9 +1,11 @@
 package edu.depaul.reservations.controller;
 
 import edu.depaul.reservations.model.Address;
+import edu.depaul.reservations.model.Organization;
 import edu.depaul.reservations.model.User;
 import edu.depaul.reservations.model.UserType;
 import edu.depaul.reservations.service.AddressServiceAPI;
+import edu.depaul.reservations.service.OrganizationServiceAPI;
 import edu.depaul.reservations.service.UserServiceAPI;
 import edu.depaul.reservations.service.UserTypeServiceAPI;
 import edu.depaul.reservations.util.WebUtils;
@@ -24,29 +26,36 @@ public class UserController {
 
     private final String addressEndpoint;
     private final String userTypeEndpoint;
+    private final String organizationEndpoint;
     private final UserServiceAPI userService;
     private final UserTypeServiceAPI userTypeService;
     private final AddressServiceAPI addressService;
+    private final OrganizationServiceAPI organizationService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserController(final @Value("${service.endpoint.addresses}") String addressEndpoint,
                           final @Value("${service.endpoint.userTypes}") String userTypeEndpoint,
+                          final @Value("${service.endpoint.organizations}") String organizationEndpoint,
                           final UserServiceAPI userService,
                           final UserTypeServiceAPI userTypeService,
                           final AddressServiceAPI addressService,
+                          final OrganizationServiceAPI organizationService,
                           final BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.addressEndpoint = addressEndpoint;
         this.userTypeEndpoint = userTypeEndpoint;
+        this.organizationEndpoint = organizationEndpoint;
         this.userService = userService;
         this.userTypeService = userTypeService;
         this.addressService = addressService;
+        this.organizationService = organizationService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("addressEndpoint", addressEndpoint);
         model.addAttribute("userTypeEndpoint", userTypeEndpoint);
+        model.addAttribute("addressEndpoint", addressEndpoint);
+        model.addAttribute("organizationEndpoint", organizationEndpoint);
     }
 
     @GetMapping
@@ -73,6 +82,10 @@ public class UserController {
             return "user/add";
         }
         UserType userType = userTypeService.get(user.typeId());
+        Organization organization = null;
+        if (user.organizationId() != null) {
+            organization = organizationService.get(user.organizationId());
+        }
         User encoded = new User(
                 user.id(),
                 user.fullName(),
@@ -82,7 +95,9 @@ public class UserController {
                 user.email(),
                 user.mobile(),
                 user.addressId(),
-                user.typeId()
+                organization,
+                user.typeId(),
+                user.organizationId()
         );
         userService.create(encoded);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user.create.success"));
@@ -101,7 +116,9 @@ public class UserController {
                 current.email(),
                 current.mobile(),
                 current.addressId(),
-                current.typeId()
+                current.organization(),
+                current.typeId(),
+                current.organizationId()
         );
         model.addAttribute("user", editing);
         if (current.addressId() != null) {
@@ -136,6 +153,10 @@ public class UserController {
             return "user/edit";
         }
         UserType userType = userTypeService.get(user.typeId());
+        Organization organization = null;
+        if (user.organizationId() != null) {
+            organization = organizationService.get(user.organizationId());
+        }
         User encoded = new User(
                 user.id(),
                 user.fullName(),
@@ -145,7 +166,9 @@ public class UserController {
                 user.email(),
                 user.mobile(),
                 user.addressId(),
-                user.typeId()
+                organization,
+                user.typeId(),
+                user.organizationId()
         );
         userService.update(username, encoded);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("user.update.success"));
@@ -164,5 +187,4 @@ public class UserController {
 //        }
         return "redirect:/users";
     }
-
 }

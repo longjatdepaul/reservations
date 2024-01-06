@@ -49,12 +49,12 @@ public class UserServiceAPI {
         );
     }
 
-    public Long create(final User user) {
+    public User create(final User user) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         String json = new Gson().toJson(user);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
-        return restTemplate.postForObject(userEndpoint, request, Long.class);
+        return restTemplate.postForObject(userEndpoint, request, User.class);
     }
 
     public void update(final String username, final User user) {

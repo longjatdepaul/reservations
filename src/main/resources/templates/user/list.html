@@ -24,6 +24,7 @@
                             <th scope="col">[[#{user.email.label}]]</th>
                             <th scope="col">[[#{user.mobile.label}]]</th>
                             <th scope="col">[[#{user.address.label}]]</th>
+                            <th scope="col">[[#{user.organization.label}]]</th>
                             <th><!-- --></th>
                         </tr>
                     </thead>
@@ -36,6 +37,7 @@
                             <td>[[${user.email}]]</td>
                             <td>[[${user.mobile}]]</td>
                             <td>[[${user.addressId}]]</td>
+                            <td><span th:text="${user.organization.name}" th:if="${user.organization != null}"></span></td>
                             <td>
                                 <div class="float-end text-nowrap">
                                     <a th:href="@{/users/edit/{username}(username=${user.username})}" class="btn btn-sm btn-secondary">[[#{user.list.edit}]]</a>

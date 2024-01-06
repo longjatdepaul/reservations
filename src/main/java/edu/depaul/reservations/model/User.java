@@ -12,5 +12,7 @@ public record User(
         String email,
         String mobile,
         Long addressId,
-        Long typeId
+        Organization organization,
+        Long typeId,
+        Long organizationId
 ) { }
