@@ -1,6 +1,7 @@
 package edu.depaul.reservations.api.users.service;
 
-import edu.depaul.reservations.api.addresses.model.Address;
+import edu.depaul.reservations.api.users.model.Organization;
+import edu.depaul.reservations.api.users.model.UserType;
 import edu.depaul.reservations.exception.NotFoundException;
 import edu.depaul.reservations.api.users.model.User;
 import edu.depaul.reservations.api.users.repos.UserRepository;
@@ -10,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 
 @Service
 public class UserService {
@@ -24,6 +24,18 @@ public class UserService {
     public List<User> findAll() {
         Pageable limit = PageRequest.of(0,15, Sort.by("id"));
         return userRepository.findAll(limit).toList();
+    }
+
+    public List<User> getAt(final Long addressId) {
+        return userRepository.findAllByAddressId(addressId);
+    }
+
+    public List<User> getOf(final UserType userType) {
+        return userRepository.findAllByType(userType);
+    }
+
+    public List<User> getIn(final Organization organization) {
+        return userRepository.findAllByOrganization(organization);
     }
 
     public List<User> search(String query) {

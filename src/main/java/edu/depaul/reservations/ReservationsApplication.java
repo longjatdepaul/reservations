@@ -1,13 +1,7 @@
 package edu.depaul.reservations;
 
 import edu.depaul.reservations.model.*;
-import edu.depaul.reservations.repos.AmenityRepository;
-import edu.depaul.reservations.repos.CapacityRepository;
-import edu.depaul.reservations.repos.ReservationRepository;
-import edu.depaul.reservations.service.AddressServiceAPI;
-import edu.depaul.reservations.service.OrganizationServiceAPI;
-import edu.depaul.reservations.service.UserServiceAPI;
-import edu.depaul.reservations.service.UserTypeServiceAPI;
+import edu.depaul.reservations.service.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Duration;
+import java.time.LocalTime;
 import java.util.*;
 
 
@@ -25,35 +20,24 @@ import java.util.*;
 @EntityScan("edu.depaul.reservations.model")
 public class ReservationsApplication {
 
-
-    private final Map<AmenityType, Integer> initialCapacities =
-            new HashMap<>() {
-                {
-                    put(AmenityType.GYM, 20);
-                    put(AmenityType.POOL, 4);
-                    put(AmenityType.SAUNA, 1);
-                }
-            };
-
     public static void main(final String[] args) {
         SpringApplication.run(ReservationsApplication.class, args);
     }
 
     @Bean
-    public CommandLineRunner loadData(UserServiceAPI userService,
-                                      UserTypeServiceAPI userTypeService,
-                                      CapacityRepository capacityRepository,
+    public CommandLineRunner loadData(UserTypeServiceAPI userTypeService,
                                       AddressServiceAPI addressService,
+                                      UserServiceAPI userService,
                                       OrganizationServiceAPI organizationService,
-                                      AmenityRepository amenityRepository,
-                                      ReservationRepository reservationRepository) {
+                                      AmenityTypeServiceAPI amenityTypeService,
+                                      AmenityServiceAPI amenityService) {
         return (args) -> {
-            UserType userType = new UserType(
+            UserType admin = new UserType(
                     0L,
                     "Administrator",
                     "provides permission to manage user accounts, organizations and roles"
             );
-            userType = userTypeService.create(userType);
+            admin = userTypeService.create(admin);
 
             Address address = new Address(
                     0L,
@@ -70,30 +54,30 @@ public class ReservationsApplication {
                     0L,
                     "Jonathan Lee Long",
                     "longj",
-                    userType,
+                    admin,
                     bCryptPasswordEncoder().encode("secret"),
                     "longj@depaulcatholic.org",
                     "+1 (973) 694-3702",
                     addressId,
                     null,
-                    userType.id(),
+                    admin.id(),
                     null
             );
             user = userService.create(user);
 
-            userType = new UserType(
+            UserType customer = new UserType(
                     0L,
                     "Customer",
                     "provides permission to manage personal addresses and create reservations"
             );
-            userType = userTypeService.create(userType);
+            userTypeService.create(customer);
 
-            userType = new UserType(
+            UserType owner = new UserType(
                     0L,
                     "Owner",
                     "provides permission to create and manage amenities"
             );
-            userType = userTypeService.create(userType);
+            userTypeService.create(owner);
 
             address = new Address(
                     0L,
@@ -124,41 +108,35 @@ public class ReservationsApplication {
                     user.mobile(),
                     user.addressId(),
                     organization,
-                    userType.id(),
+                    admin.id(),
                     organization.id()
             );
             userService.update(user.username(), user);
 
-//            for (AmenityType amenityType : initialCapacities.keySet()) {
-//                capacityRepository.save(new Capacity(amenityType, initialCapacities.get(amenityType)));
-//            }
-//
-//            DayOfWeekType[] availability = new DayOfWeekType[] {
-//                    DayOfWeekType.SATURDAY,
-//                    DayOfWeekType.SUNDAY
-//            };
-//            Amenity amenity = Amenity.builder()
-//                    .name("DePaul Basketball Court")
-//                    .address(address)
-//                    .location("Gym")
-//                    .type(AmenityType.GYM)
-//                    .capacity(200)
-//                    .rate(99.99)
-//                    .daysAvailable(new HashSet<>(Arrays.asList(availability)))
-//                    .build();
-//            amenity = amenityRepository.save(amenity);
-//
-//            Date date = new Date();
-//            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//            Reservation reservation = Reservation.builder()
-//                    .reservationDate(localDate)
-//                    .startTime(LocalTime.of(12, 0))
-//                    .endTime(LocalTime.of(13, 0))
-//                    .user(user)
-//                    .amenities(Collections.singleton(amenity))
-//                    .amenityType(AmenityType.GYM)
-//                    .build();
-//            reservationRepository.save(reservation);
+            AmenityType amenityType = new AmenityType(
+                    0L,
+                    "Gym",
+                    "an indoor venue for exercise and sports"
+            );
+            amenityType = amenityTypeService.create(amenityType);
+
+            Amenity amenity = new Amenity(
+                    0L,
+                    "DePaul Basketball Court",
+                    organization.id(),
+                    addressId,
+                    amenityType,
+                    List.of("Main Gym"),
+                    null,
+                    Set.of("SATURDAY", "SUNDAY"),
+                    LocalTime.of(8,0,0,0),
+                    LocalTime.of(18,0,0,0),
+                    30,
+                    "full court gym with bleachers that sit 150",
+                    amenityType.id(),
+                    "Main Gym"
+            );
+            amenityService.create(amenity);
         };
     }
 

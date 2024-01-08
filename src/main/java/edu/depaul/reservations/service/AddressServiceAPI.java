@@ -2,13 +2,11 @@ package edu.depaul.reservations.service;
 
 import com.google.gson.Gson;
 import edu.depaul.reservations.model.Address;
-import edu.depaul.reservations.exception.NotFoundException;
 import edu.depaul.reservations.model.Amenity;
+import edu.depaul.reservations.model.Organization;
 import edu.depaul.reservations.model.User;
-import edu.depaul.reservations.repos.AmenityRepository;
 import edu.depaul.reservations.util.WebUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -23,14 +21,20 @@ public class AddressServiceAPI {
 
     private final String addressEndpoint;
     private final RestTemplate restTemplate;
-    private final AmenityRepository amenityRepository;
+    private final AmenityServiceAPI amenityService;
+    private final OrganizationServiceAPI organizationService;
+    private final UserServiceAPI userService;
 
     public AddressServiceAPI(final @Value("${service.endpoint.addresses}") String addressEndpoint,
                              final RestTemplate restTemplate,
-                             final AmenityRepository amenityRepository) {
+                             final AmenityServiceAPI amenityService,
+                             final OrganizationServiceAPI organizationService,
+                             final UserServiceAPI userService) {
         this.addressEndpoint = addressEndpoint;
         this.restTemplate = restTemplate;
-        this.amenityRepository = amenityRepository;
+        this.amenityService = amenityService;
+        this.organizationService = organizationService;
+        this.userService = userService;
     }
 
     public List<Address> findAll() {
@@ -93,13 +97,27 @@ public class AddressServiceAPI {
         ));
     }
 
-//    public String getReferencedWarning(final Long id) {
-//        final Address address = addressRepository.findById(id)
-//                .orElseThrow(NotFoundException::new);
-//        final Amenity amenity = amenityRepository.findFirstByAddress(address);
-//        if (amenity != null) {
-//            return WebUtils.getMessage("address.amenity.address.referenced", amenity.getId());
-//        }
-//        return null;
-//    }
+    public String getReferencedWarning(final Long id) {
+        // check that address exists, will throw NotFoundException
+        final Address address = get(id);
+        final List<Amenity> amenities = amenityService.findByAddress(address.id());
+        if (!amenities.isEmpty()) {
+            return WebUtils.getMessage("address.amenity.address.referenced",
+                    Arrays.toString(amenities.stream().map(Amenity::id).toArray())
+            );
+        }
+        final List<Organization> organizations = organizationService.findByAddress(address.id());
+        if (!organizations.isEmpty()) {
+            return WebUtils.getMessage("address.organization.address.referenced",
+                    Arrays.toString(organizations.stream().map(Organization::id).toArray())
+            );
+        }
+        final List<User> users = userService.findByAddress(address.id());
+        if (!users.isEmpty()) {
+            return WebUtils.getMessage("address.user.address.referenced",
+                    Arrays.toString(users.stream().map(User::id).toArray())
+            );
+        }
+        return null;
+    }
 }

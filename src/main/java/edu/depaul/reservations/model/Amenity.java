@@ -1,85 +1,25 @@
 package edu.depaul.reservations.model;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import java.time.OffsetDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Set;
 
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-
-@Entity
-@EntityListeners(AuditingEntityListener.class)
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class Amenity {
-
-    @Id
-    @Column(nullable = false, updatable = false)
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
-    )
-    private Long id;
-
-    @Column(nullable = false, unique = true, length = 256)
-    private String name;
-
-    @Column(nullable = false)
-    private Long address;
-
-    @Column(length = 256)
-    private String location;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private AmenityType type;
-
-    @Column(nullable = false)
-    private Integer capacity;
-
-    @Column()
-    private Double rate;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "DaysAvailable",
-            joinColumns = @JoinColumn(name = "amenityId")
-    )
-    private Set<DayOfWeekType> daysAvailable;
-
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private OffsetDateTime dateCreated;
-
-    @LastModifiedDate
-    @Column(nullable = false)
-    private OffsetDateTime lastUpdated;
-
-    @PrePersist
-    public void prePersist() {
-        dateCreated = OffsetDateTime.now();
-        lastUpdated = dateCreated;
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        lastUpdated = OffsetDateTime.now();
-    }
-
-    public String toString() {
-        return name;
-    }
-}
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record Amenity(
+        Long id,
+        String name,
+        Long organizationId,
+        Long addressId,
+        AmenityType type,
+        List<String> resources,
+        Double rate,
+        Set<String> daysAvailable,
+        LocalTime timeAvailableStarting,
+        LocalTime timeAvailableEnding,
+        Integer transitionMinutes,
+        String description,
+        Long typeId,
+        String resourcesString
+) { }

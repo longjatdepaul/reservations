@@ -1,13 +1,14 @@
 package edu.depaul.reservations.controller;
 
-import edu.depaul.reservations.api.addresses.model.Address;
 import edu.depaul.reservations.model.*;
-import edu.depaul.reservations.api.addresses.repos.AddressRepository;
-import edu.depaul.reservations.service.AmenityService;
-import edu.depaul.reservations.util.CustomCollectors;
+import edu.depaul.reservations.service.AddressServiceAPI;
+import edu.depaul.reservations.service.AmenityServiceAPI;
+import edu.depaul.reservations.service.AmenityTypeServiceAPI;
+import edu.depaul.reservations.service.OrganizationServiceAPI;
 import edu.depaul.reservations.util.WebUtils;
 import javax.validation.Valid;
-import org.springframework.data.domain.Sort;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,22 +24,39 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/amenities")
 public class AmenityController {
 
-    private final AmenityService amenityService;
-    private final AddressRepository addressRepository;
+    private final String organizationEndpoint;
+    private final String addressEndpoint;
+    private final String amenityTypeEndpoint;
+    private final String daysOfWeekEndpoint;
+    private final AmenityServiceAPI amenityService;
+    private final OrganizationServiceAPI organizationService;
+    private final AddressServiceAPI addressService;
+    private final AmenityTypeServiceAPI amenityTypeService;
 
-    public AmenityController(final AmenityService amenityService,
-                             final AddressRepository addressRepository) {
+    public AmenityController(final @Value("${service.endpoint.organizations}") String organizationEndpoint,
+                             final @Value("${service.endpoint.addresses}") String addressEndpoint,
+                             final @Value("${service.endpoint.amenityTypes}") String amenityTypeEndpoint,
+                             final @Value("${service.endpoint.daysOfWeek}") String daysOfWeekEndpoint,
+                             final AmenityServiceAPI amenityService,
+                             final OrganizationServiceAPI organizationService,
+                             final AddressServiceAPI addressService,
+                             final AmenityTypeServiceAPI amenityTypeService) {
+        this.organizationEndpoint = organizationEndpoint;
+        this.addressEndpoint = addressEndpoint;
+        this.amenityTypeEndpoint = amenityTypeEndpoint;
+        this.daysOfWeekEndpoint = daysOfWeekEndpoint;
         this.amenityService = amenityService;
-        this.addressRepository = addressRepository;
+        this.organizationService = organizationService;
+        this.addressService = addressService;
+        this.amenityTypeService = amenityTypeService;
     }
 
     @ModelAttribute
     public void prepareContext(final Model model) {
-        model.addAttribute("typeValues", AmenityType.values());
-        model.addAttribute("daysAvailableValues", DayOfWeekType.values());
-        model.addAttribute("addressValues", addressRepository.findAll(Sort.by("id"))
-                .stream()
-                .collect(CustomCollectors.toSortedMap(Address::getId, Address::getName)));
+        model.addAttribute("organizationEndpoint", organizationEndpoint);
+        model.addAttribute("addressEndpoint", addressEndpoint);
+        model.addAttribute("amenityTypeEndpoint", amenityTypeEndpoint);
+        model.addAttribute("daysOfWeekEndpoint", daysOfWeekEndpoint);
     }
 
     @GetMapping
@@ -55,20 +73,52 @@ public class AmenityController {
     @PostMapping("/add")
     public String add(@ModelAttribute("amenity") @Valid final Amenity amenity,
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
-        if (!bindingResult.hasFieldErrors("name") && amenityService.nameExists(amenity.getName())) {
+        if (!bindingResult.hasFieldErrors("name") && amenityService.nameExists(amenity.name())) {
             bindingResult.rejectValue("name", "Exists.amenity.name");
         }
         if (bindingResult.hasErrors()) {
             return "amenity/add";
         }
-        amenityService.create(amenity);
+        AmenityType amenityType = amenityTypeService.get(amenity.typeId());
+        Amenity mashup = new Amenity(
+                amenity.id(),
+                amenity.name(),
+                amenity.organizationId(),
+                amenity.addressId(),
+                amenityType,
+                amenity.resources(),
+                amenity.rate(),
+                amenity.daysAvailable(),
+                amenity.timeAvailableStarting(),
+                amenity.timeAvailableEnding(),
+                amenity.transitionMinutes(),
+                amenity.description(),
+                amenity.typeId(),
+                amenity.resourcesString()
+        );
+        amenityService.create(mashup);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("amenity.create.success"));
         return "redirect:/amenities";
     }
 
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable(name = "id") final Long id, final Model model) {
-        model.addAttribute("amenity", amenityService.get(id));
+        Amenity current = amenityService.get(id);
+        model.addAttribute("amenity", current);
+        if (current.organizationId() != null) {
+            Organization currentOrganization = organizationService.get(current.organizationId());
+            model.addAttribute("currentOrganization", currentOrganization.name());
+        }
+        if (current.addressId() != null) {
+            Address currentAddress = addressService.get(current.addressId());
+            model.addAttribute("currentAddress", String.format("%s, %s, %s, %s %s",
+                    currentAddress.name(),
+                    currentAddress.street(),
+                    currentAddress.city(),
+                    currentAddress.state(),
+                    currentAddress.zip())
+            );
+        }
         return "amenity/edit";
     }
 
@@ -78,14 +128,31 @@ public class AmenityController {
             final BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
         final Amenity currentAmenity = amenityService.get(id);
         if (!bindingResult.hasFieldErrors("name") &&
-                !amenity.getName().equalsIgnoreCase(currentAmenity.getName()) &&
-                amenityService.nameExists(amenity.getName())) {
+                !amenity.name().equalsIgnoreCase(currentAmenity.name()) &&
+                amenityService.nameExists(amenity.name())) {
             bindingResult.rejectValue("name", "Exists.amenity.name");
         }
         if (bindingResult.hasErrors()) {
             return "amenity/edit";
         }
-        amenityService.update(id, amenity);
+        AmenityType amenityType = amenityTypeService.get(amenity.typeId());
+        Amenity mashup = new Amenity(
+                amenity.id(),
+                amenity.name(),
+                amenity.organizationId(),
+                amenity.addressId(),
+                amenityType,
+                amenity.resources(),
+                amenity.rate(),
+                amenity.daysAvailable(),
+                amenity.timeAvailableStarting(),
+                amenity.timeAvailableEnding(),
+                amenity.transitionMinutes(),
+                amenity.description(),
+                amenity.typeId(),
+                amenity.resourcesString()
+        );
+        amenityService.update(id, mashup);
         redirectAttributes.addFlashAttribute(WebUtils.MSG_SUCCESS, WebUtils.getMessage("amenity.update.success"));
         return "redirect:/amenities";
     }
@@ -93,14 +160,8 @@ public class AmenityController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable(name = "id") final Long id,
             final RedirectAttributes redirectAttributes) {
-        final String referencedWarning = amenityService.getReferencedWarning(id);
-        if (referencedWarning != null) {
-            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, referencedWarning);
-        } else {
-            amenityService.delete(id);
-            redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("amenity.delete.success"));
-        }
+        amenityService.delete(id);
+        redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("amenity.delete.success"));
         return "redirect:/amenities";
     }
-
 }

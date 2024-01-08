@@ -87,13 +87,13 @@ public class AddressController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable(name = "id") final Long id,
             final RedirectAttributes redirectAttributes) {
-//        final String referencedWarning = addressService.getReferencedWarning(id);
-//        if (referencedWarning != null) {
-//            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, referencedWarning);
-//        } else {
+        final String referencedWarning = addressService.getReferencedWarning(id);
+        if (referencedWarning != null) {
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, referencedWarning);
+        } else {
             addressService.delete(id);
             redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("address.delete.success"));
-//        }
+        }
         return "redirect:/addresses";
     }
 

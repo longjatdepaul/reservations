@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
 @Service
 public class OrganizationService {
 
@@ -23,6 +22,14 @@ public class OrganizationService {
     public List<Organization> findAll() {
         Pageable limit = PageRequest.of(0,15, Sort.by("id"));
         return organizationRepository.findAll(limit).toList();
+    }
+
+    public List<Organization> getAt(final Long addressId) {
+        return organizationRepository.findAllByAddressId(addressId);
+    }
+
+    public List<Organization> getFor(final String username) {
+        return organizationRepository.findAllByContactUser(username);
     }
 
     public List<Organization> search(String query) {

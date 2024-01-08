@@ -10,5 +10,9 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 
     boolean existsByNameIgnoreCase(String name);
 
+    List<Organization> findAllByAddressId(Long addressId);
+
+    List<Organization> findAllByContactUser(String username);
+
     List<Organization> findByNameContainingIgnoreCase(String name);
 }

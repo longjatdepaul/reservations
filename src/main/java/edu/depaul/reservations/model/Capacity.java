@@ -29,13 +29,12 @@ public class Capacity {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @Enumerated(EnumType.STRING)
-    private AmenityType amenityType;
+    private String amenityType;
 
     @Column(nullable = false)
     private int capacity;
 
-    public Capacity(AmenityType amenityType, int capacity) {
+    public Capacity(String amenityType, int capacity) {
         this.amenityType = amenityType;
         this.capacity = capacity;
     }

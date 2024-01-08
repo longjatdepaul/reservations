@@ -1,28 +1,21 @@
-package edu.depaul.reservations.model;
-
-import javax.persistence.*;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.util.Set;
+package edu.depaul.reservations.api.amenities.model;
 
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
+import java.time.OffsetDateTime;
 
 @Entity
-@Table
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation {
+public class AmenityType {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -38,20 +31,11 @@ public class Reservation {
     )
     private Long id;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(nullable = false)
-    private LocalDate reservationDate;
+    @Column(nullable = false, unique = true, length = 256)
+    private String name;
 
-    @DateTimeFormat(pattern = "HH:mm")
-    @Column
-    private LocalTime startTime;
-
-    @DateTimeFormat(pattern = "HH:mm")
-    @Column
-    private LocalTime endTime;
-
-    @Column(nullable = false)
-    private Long userId;
+    @Column(length = 512)
+    private String description;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -60,9 +44,6 @@ public class Reservation {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
-
-    @Column(nullable = false)
-    private String amenityType;
 
     @PrePersist
     public void prePersist() {
@@ -75,13 +56,7 @@ public class Reservation {
         lastUpdated = OffsetDateTime.now();
     }
 
-    public Reservation(LocalDate reservationDate, LocalTime startTime,
-                       LocalTime endTime, Long userId, String amenityType) {
-        this.reservationDate = reservationDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.userId = userId;
-        this.amenityType = amenityType;
+    public String toString() {
+        return name;
     }
-
 }

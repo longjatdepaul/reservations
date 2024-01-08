@@ -1,7 +1,9 @@
 package edu.depaul.reservations.service;
 
 import com.google.gson.Gson;
+import edu.depaul.reservations.model.User;
 import edu.depaul.reservations.model.UserType;
+import edu.depaul.reservations.util.WebUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,17 +13,19 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
-
 @Service
 public class UserTypeServiceAPI {
 
     private final String userTypeEndpoint;
     private final RestTemplate restTemplate;
+    private final UserServiceAPI userService;
 
     public UserTypeServiceAPI(final @Value("${service.endpoint.userTypes}") String userTypeEndpoint,
-                              final RestTemplate restTemplate) {
+                              final RestTemplate restTemplate,
+                              final UserServiceAPI userService) {
         this.userTypeEndpoint = userTypeEndpoint;
         this.restTemplate = restTemplate;
+        this.userService = userService;
     }
 
     public List<UserType> findAll() {
@@ -82,5 +86,17 @@ public class UserTypeServiceAPI {
                 Boolean.class,
                 map
         ));
+    }
+
+    public String getReferencedWarning(final Long id) {
+        // check that user type exists, will throw NotFoundException
+        final UserType userType = get(id);
+        final List<User> users = userService.findByUserType(userType.id());
+        if (!users.isEmpty()) {
+            return WebUtils.getMessage("userType.user.userType.referenced",
+                    Arrays.toString(users.stream().map(User::id).toArray())
+            );
+        }
+        return null;
     }
 }

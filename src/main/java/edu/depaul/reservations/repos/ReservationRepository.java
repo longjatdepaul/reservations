@@ -15,10 +15,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Reservation findFirstByUserId(Long userId);
 
-    Reservation findFirstByAmenities(Amenity amenity);
-
-    List<Reservation> findAllByAmenities(Amenity amenity);
-
     @SuppressWarnings("unused")
     List<Reservation> findReservationsByAmenityType(AmenityType amenityType);
 

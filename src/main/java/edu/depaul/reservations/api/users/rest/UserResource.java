@@ -1,8 +1,12 @@
 package edu.depaul.reservations.api.users.rest;
 
+import edu.depaul.reservations.api.users.model.Organization;
 import edu.depaul.reservations.api.users.model.User;
 import edu.depaul.reservations.api.users.model.UserItem;
+import edu.depaul.reservations.api.users.model.UserType;
+import edu.depaul.reservations.api.users.service.OrganizationService;
 import edu.depaul.reservations.api.users.service.UserService;
+import edu.depaul.reservations.api.users.service.UserTypeService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,14 +24,37 @@ import java.util.stream.Collectors;
 public class UserResource {
 
     private final UserService userService;
+    private final UserTypeService userTypeService;
+    private final OrganizationService organizationService;
 
-    public UserResource(final UserService userService) {
+    public UserResource(final UserService userService,
+                        final UserTypeService userTypeService,
+                        final OrganizationService organizationService) {
         this.userService = userService;
+        this.userTypeService = userTypeService;
+        this.organizationService = organizationService;
     }
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.findAll());
+    }
+
+    @GetMapping("/at/{addressId}")
+    public ResponseEntity<List<User>> getUsersAt(@PathVariable(name = "addressId") final Long addressId) {
+        return ResponseEntity.ok(userService.getAt(addressId));
+    }
+
+    @GetMapping("/of/{typeId}")
+    public ResponseEntity<List<User>> getUsersOf(@PathVariable(name = "typeId") final Long typeId) {
+        final UserType userType = userTypeService.get(typeId);
+        return ResponseEntity.ok(userService.getOf(userType));
+    }
+
+    @GetMapping("/in/{organizationId}")
+    public ResponseEntity<List<User>> getUsersIn(@PathVariable(name = "organizationId") final Long organizationId) {
+        final Organization organization = organizationService.get(organizationId);
+        return ResponseEntity.ok(userService.getIn(organization));
     }
 
     @GetMapping("/search")

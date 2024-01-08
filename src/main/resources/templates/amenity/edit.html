@@ -2,7 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
         layout:decorate="~{layout}">
     <head>
+        <meta charset="UTF-8"/>
         <title>[[#{amenity.edit.headline}]]</title>
+
+        <link th:rel="stylesheet" th:href="@{/assets/select2-develop/dist/css/select2.css}"/>
+        <link th:rel="stylesheet" th:href="@{/assets/select2-bootstrap4-theme-master/dist/select2-bootstrap4.css}"/>
+        <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
     </head>
     <body>
         <div layout:fragment="content">
@@ -16,14 +21,123 @@
             <form th:action="${requestUri}" method="post">
                 <div th:replace="~{fragments/forms::inputRow(object='amenity', field='id', disabled=true, type='number')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='amenity', field='name')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='address', type='select')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='location')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='type', type='radio')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='capacity', type='number')}" />
+                <div class="row mb-3">
+                    <label for="organization" class="col-md-2 col-form-label"><span>Organization</span></label>
+                    <div class="col-md-10">
+                        <select id="organization" class="form-control select2-single" th:field="*{amenity.organizationId}">
+                            <option th:value="${amenity.organizationId}">
+                                <span th:text="${currentOrganization}" th:if="${amenity.organizationId != null}"></span>
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="address" class="col-md-2 col-form-label"><span>Address</span></label>
+                    <div class="col-md-10">
+                        <select id="address" class="form-control select2-single" th:field="*{amenity.addressId}">
+                            <option th:value="${amenity.addressId}">
+                                <span th:text="${currentAddress}" th:if="${amenity.addressId != null}"></span>
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="type" class="col-md-2 col-form-label"><span>Type</span></label>
+                    <div class="col-md-10">
+                        <select id="type" class="form-control select2-single" th:field="*{amenity.typeId}">
+                            <option th:value="${amenity.type.id}">
+                                <span th:text="${amenity.type.name}" th:if="${amenity.type != null}"></span>
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='resourcesString', type='textarea')}" />
                 <div th:replace="~{fragments/forms::inputRow(object='amenity', field='rate', type='number')}" />
-                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='daysAvailable', type='multiselect')}" />
+                <div class="row mb-3">
+                    <label for="daysAvailable" class="col-md-2 col-form-label"><span>Days Available</span></label>
+                    <div class="col-md-10">
+                        <select id="daysAvailable" class="form-control select2-multiple" th:field="*{amenity.daysAvailable}">
+                            <option th:each="day : ${amenity.daysAvailable}" th:value="${day}" th:text="${day}" th:selected="true"></option>
+                        </select>
+                    </div>
+                </div>
+                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='timeAvailableStarting', inputClass='js-timepicker')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='timeAvailableEnding', inputClass='js-timepicker')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='transitionMinutes', type='number')}" />
+                <div th:replace="~{fragments/forms::inputRow(object='amenity', field='description')}" />
+                <input type="hidden" id="organizationEndpoint" th:value="${organizationEndpoint}"/>
+                <input type="hidden" id="addressEndpoint" th:value="${addressEndpoint}"/>
+                <input type="hidden" id="amenityTypeEndpoint" th:value="${amenityTypeEndpoint}"/>
+                <input type="hidden" id="daysOfWeekEndpoint" th:value="${daysOfWeekEndpoint}"/>
                 <input type="submit" th:value="#{amenity.edit.headline}" class="btn btn-primary mt-4" />
             </form>
         </div>
+
+        <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+        <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+        <script th:src="@{/assets/select2-develop/dist/js/select2.full.js}"></script>
+
+        <script>
+            $("#organization").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: $("#organizationEndpoint").val() + "/search",
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $("#address").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: $("#addressEndpoint").val() + "/search",
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $("#type").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: $("#amenityTypeEndpoint").val() + "/search",
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $("#daysAvailable").select2({
+                theme: "bootstrap4",
+                ajax: {
+                    url: $("#daysOfWeekEndpoint").val(),
+                    dataType: 'json',
+                    delay: 250,
+                    processResults: function (response) {
+                        return {
+                            results: response
+                        };
+                    },
+                    cache: true
+                }
+            });
+        </script>
     </body>
 </html>

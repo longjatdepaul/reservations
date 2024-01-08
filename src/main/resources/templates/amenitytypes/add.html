@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>[[#{amenityType.add.headline}]]</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+            <div class="d-flex flex-wrap mb-4">
+                <h1 class="flex-grow-1">[[#{amenityType.add.headline}]]</h1>
+                <div style="width: 100%">
+                    <a th:href="@{/amenitytypes}" class="btn btn-secondary">[[#{amenityType.add.back}]]</a>
+                </div>
+            </div>
+            <div th:replace="~{fragments/forms::globalErrors('amenityType')}" />
+            <form th:action="${requestUri}" method="post">
+                <div class="form-group">
+                    <div th:replace="~{fragments/forms::inputRow(object='amenityType', field='name')}" />
+                    <div th:replace="~{fragments/forms::inputRow(object='amenityType', field='description')}" />
+                    <input type="submit" th:value="#{amenityType.add.headline}" class="btn btn-primary mt-4" />
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

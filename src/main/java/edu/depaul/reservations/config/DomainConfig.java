@@ -15,11 +15,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EntityScan(basePackages = {
         "edu.depaul.reservations.api.addresses.model",
+        "edu.depaul.reservations.api.amenities.model",
         "edu.depaul.reservations.api.users.model"
 })
 @EnableJpaRepositories(basePackages = {
         "edu.depaul.reservations.repos",
         "edu.depaul.reservations.api.addresses.repos",
+        "edu.depaul.reservations.api.amenities.repos",
         "edu.depaul.reservations.api.users.repos"
 })
 @EnableTransactionManagement

@@ -1,36 +1,85 @@
 package edu.depaul.reservations.service;
 
 import com.google.gson.Gson;
+import edu.depaul.reservations.model.Organization;
 import edu.depaul.reservations.model.User;
-import edu.depaul.reservations.repos.ReservationRepository;
 
 import java.util.*;
 
+import edu.depaul.reservations.util.WebUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-
 @Service
 public class UserServiceAPI {
 
     private final String userEndpoint;
     private final RestTemplate restTemplate;
-    private final ReservationRepository reservationRepository;
+    private final OrganizationServiceAPI organizationService;
 
     public UserServiceAPI(final @Value("${service.endpoint.users}") String userEndpoint,
                           final RestTemplate restTemplate,
-                          final ReservationRepository reservationRepository) {
+                          @Lazy final OrganizationServiceAPI organizationService) {
         this.userEndpoint = userEndpoint;
         this.restTemplate = restTemplate;
-        this.reservationRepository = reservationRepository;
+        this.organizationService = organizationService;
     }
 
     public List<User> findAll() {
         User[] users = restTemplate.getForObject(userEndpoint, User[].class);
+        if (users == null) {
+            return Collections.emptyList();
+        }
+        else {
+            return Arrays.asList(users);
+        }
+    }
+
+    public List<User> findByAddress(final Long addressId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("addressId", addressId.toString());
+        User[] users = restTemplate.getForObject(
+                userEndpoint + "/at/{addressId}",
+                User[].class,
+                map
+        );
+        if (users == null) {
+            return Collections.emptyList();
+        }
+        else {
+            return Arrays.asList(users);
+        }
+    }
+
+    public List<User> findByUserType(final Long typeId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("typeId", typeId.toString());
+        User[] users = restTemplate.getForObject(
+                userEndpoint + "/of/{typeId}",
+                User[].class,
+                map
+        );
+        if (users == null) {
+            return Collections.emptyList();
+        }
+        else {
+            return Arrays.asList(users);
+        }
+    }
+
+    public List<User> findByOrganization(final Long organizationId) {
+        Map<String, String> map = new HashMap<>();
+        map.put("organizationId", organizationId.toString());
+        User[] users = restTemplate.getForObject(
+                userEndpoint + "/in/{organizationId}",
+                User[].class,
+                map
+        );
         if (users == null) {
             return Collections.emptyList();
         }
@@ -99,13 +148,15 @@ public class UserServiceAPI {
         ));
     }
 
-//    public String getReferencedWarning(final Long id) {
-//        final User user = userRepository.findById(id)
-//                .orElseThrow(NotFoundException::new);
-//        final Reservation userReservation = reservationRepository.findFirstByUser(user);
-//        if (userReservation != null) {
-//            return WebUtils.getMessage("user.reservation.user.referenced", userReservation.getId());
-//        }
-//        return null;
-//    }
+    public String getReferencedWarning(final String username) {
+        // check that user exists, will throw NotFoundException
+        final User user = get(username);
+        final List<Organization> organizations = organizationService.findByContactUser(user.username());
+        if (!organizations.isEmpty()) {
+            return WebUtils.getMessage("user.organization.user.referenced",
+                    Arrays.toString(organizations.stream().map(Organization::id).toArray())
+            );
+        }
+        return null;
+    }
 }

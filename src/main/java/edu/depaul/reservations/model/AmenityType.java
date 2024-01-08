@@ -1,20 +1,10 @@
 package edu.depaul.reservations.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-public enum AmenityType {
-
-    POOL("POOL"),
-    SAUNA("SAUNA"),
-    GYM("GYM");
-
-    private final String name;
-
-    AmenityType(String value) {
-        name = value;
-    }
-
-    @Override
-    public String toString() {
-        return name;
-    }
-}
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record AmenityType(
+        Long id,
+        String name,
+        String description
+) { }

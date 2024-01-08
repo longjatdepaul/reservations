@@ -19,7 +19,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
-
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -178,13 +177,13 @@ public class UserController {
     @PostMapping("/delete/{username}")
     public String delete(@PathVariable(name = "username") final String username,
             final RedirectAttributes redirectAttributes) {
-//        final String referencedWarning = userService.getReferencedWarning(id);
-//        if (referencedWarning != null) {
-//            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, referencedWarning);
-//        } else {
+        final String referencedWarning = userService.getReferencedWarning(username);
+        if (referencedWarning != null) {
+            redirectAttributes.addFlashAttribute(WebUtils.MSG_ERROR, referencedWarning);
+        } else {
             userService.delete(username);
             redirectAttributes.addFlashAttribute(WebUtils.MSG_INFO, WebUtils.getMessage("user.delete.success"));
-//        }
+        }
         return "redirect:/users";
     }
 }

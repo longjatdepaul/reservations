@@ -29,6 +29,16 @@ public class OrganizationResource {
         return ResponseEntity.ok(organizationService.findAll());
     }
 
+    @GetMapping("/at/{addressId}")
+    public ResponseEntity<List<Organization>> getOrganizationsAt(@PathVariable(name = "addressId") final Long addressId) {
+        return ResponseEntity.ok(organizationService.getAt(addressId));
+    }
+
+    @GetMapping("/for/{username}")
+    public ResponseEntity<List<Organization>> getOrganizationsFor(@PathVariable(name = "username") final String username) {
+        return ResponseEntity.ok(organizationService.getFor(username));
+    }
+
     @GetMapping("/search")
     public List<OrganizationItem> organizationItems(@RequestParam(value = "q", required = false) String query) {
         if (!StringUtils.hasLength(query)) {

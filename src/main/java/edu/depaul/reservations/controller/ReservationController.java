@@ -1,9 +1,9 @@
 package edu.depaul.reservations.controller;
 
-import edu.depaul.reservations.model.Amenity;
+import edu.depaul.reservations.api.amenities.model.Amenity;
 import edu.depaul.reservations.model.User;
 import edu.depaul.reservations.model.Reservation;
-import edu.depaul.reservations.repos.AmenityRepository;
+import edu.depaul.reservations.api.amenities.repos.AmenityRepository;
 import edu.depaul.reservations.service.ReservationService;
 import edu.depaul.reservations.service.UserServiceAPI;
 import edu.depaul.reservations.util.CustomCollectors;

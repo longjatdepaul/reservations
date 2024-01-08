@@ -1,10 +1,11 @@
-package edu.depaul.reservations.model;
+package edu.depaul.reservations.api.amenities.model;
 
 import javax.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import lombok.*;
@@ -15,14 +16,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Entity
-@Table
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reservation {
+public class Amenity {
 
     @Id
     @Column(nullable = false, updatable = false)
@@ -38,20 +38,45 @@ public class Reservation {
     )
     private Long id;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(nullable = false)
-    private LocalDate reservationDate;
-
-    @DateTimeFormat(pattern = "HH:mm")
-    @Column
-    private LocalTime startTime;
-
-    @DateTimeFormat(pattern = "HH:mm")
-    @Column
-    private LocalTime endTime;
+    @Column(nullable = false, unique = true, length = 256)
+    private String name;
 
     @Column(nullable = false)
-    private Long userId;
+    private Long organizationId;
+
+    @Column(nullable = false)
+    private Long addressId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "type_id", nullable = false)
+    private AmenityType type;
+
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "resources", joinColumns = @JoinColumn(name = "amenity_id"))
+    @Column(name = "resource", nullable = false, length = 256)
+    private List<String> resources = new ArrayList<>();
+
+    @Column()
+    private Double rate;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @JoinTable(name = "DaysAvailable", joinColumns = @JoinColumn(name = "amenity_id"))
+    @Column(nullable = false)
+    private Set<DayOfWeek> daysAvailable;
+;
+    @DateTimeFormat(pattern = "HH:mm")
+    @Column(nullable = false)
+    private LocalTime timeAvailableStarting;
+
+    @DateTimeFormat(pattern = "HH:mm")
+    @Column(nullable = false)
+    private LocalTime timeAvailableEnding;
+
+    @Column()
+    private Integer transitionMinutes;
+
+    @Column(length = 512)
+    private String description;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -60,9 +85,6 @@ public class Reservation {
     @LastModifiedDate
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
-
-    @Column(nullable = false)
-    private String amenityType;
 
     @PrePersist
     public void prePersist() {
@@ -75,13 +97,7 @@ public class Reservation {
         lastUpdated = OffsetDateTime.now();
     }
 
-    public Reservation(LocalDate reservationDate, LocalTime startTime,
-                       LocalTime endTime, Long userId, String amenityType) {
-        this.reservationDate = reservationDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.userId = userId;
-        this.amenityType = amenityType;
+    public String toString() {
+        return name;
     }
-
 }
